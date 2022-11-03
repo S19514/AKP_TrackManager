@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class Payment
@@ -11,7 +13,7 @@ namespace AKP_TrackManager.Models
         public DateTime PaymentDate { get; set; }
         public int MemberMemberId { get; set; }
 
-        public virtual ClubMembership ClubMembershipMembership { get; set; } = null!;
-        public virtual Member MemberMember { get; set; } = null!;
+        public virtual ClubMembership ClubMembershipMembership { get; set; }
+        public virtual Member MemberMember { get; set; }
     }
 }

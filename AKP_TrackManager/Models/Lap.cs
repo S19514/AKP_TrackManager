@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class Lap
@@ -11,12 +13,12 @@ namespace AKP_TrackManager.Models
         }
 
         public int LapId { get; set; }
-        public int MeasuredTime { get; set; }
-        public int PenaltyTime { get; set; }
-        public int AbsoluteTime { get; set; }
+        public TimeSpan MeasuredTime { get; set; }
+        public TimeSpan PenaltyTime { get; set; }
+        public TimeSpan AbsoluteTime { get; set; }
         public int TrainingTrainingId { get; set; }
 
-        public virtual training TrainingTraining { get; set; } = null!;
+        public virtual training TrainingTraining { get; set; }
         public virtual ICollection<MemberCarOnLap> MemberCarOnLaps { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class MemberCarOnLap
@@ -10,8 +12,8 @@ namespace AKP_TrackManager.Models
         public int CarCarId { get; set; }
         public int LapLapId { get; set; }
 
-        public virtual Car CarCar { get; set; } = null!;
-        public virtual Lap LapLap { get; set; } = null!;
-        public virtual Member MemberMember { get; set; } = null!;
+        public virtual Car CarCar { get; set; }
+        public virtual Lap LapLap { get; set; }
+        public virtual Member MemberMember { get; set; }
     }
 }

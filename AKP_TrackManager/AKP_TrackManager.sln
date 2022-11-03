@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKP_TrackManager", "AKP_TrackManager.csproj", "{1BF784DF-87CD-4144-8EAC-ACD8A5BA35B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKP_TrackManager", "AKP_TrackManager.csproj", "{8A66C3DD-17D5-4E67-A20F-E071CAE5253D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1BF784DF-87CD-4144-8EAC-ACD8A5BA35B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BF784DF-87CD-4144-8EAC-ACD8A5BA35B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BF784DF-87CD-4144-8EAC-ACD8A5BA35B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BF784DF-87CD-4144-8EAC-ACD8A5BA35B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A66C3DD-17D5-4E67-A20F-E071CAE5253D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A66C3DD-17D5-4E67-A20F-E071CAE5253D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A66C3DD-17D5-4E67-A20F-E071CAE5253D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A66C3DD-17D5-4E67-A20F-E071CAE5253D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {0FCA5D92-1371-424D-9A3B-2D577CF83610}
+		SolutionGuid = {3C9EA404-A8B7-4F0D-B696-F714C42432B4}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class Car
@@ -13,8 +15,8 @@ namespace AKP_TrackManager.Models
         }
 
         public int CarId { get; set; }
-        public string Make { get; set; } = null!;
-        public string Model { get; set; } = null!;
+        public string Make { get; set; }
+        public string Model { get; set; }
         public decimal EngingeCapacity { get; set; }
         public int EnginePower { get; set; }
 

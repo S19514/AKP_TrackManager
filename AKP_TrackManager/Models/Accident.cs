@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class Accident

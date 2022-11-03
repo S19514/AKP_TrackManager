@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class TrainingAttandance
@@ -9,7 +11,7 @@ namespace AKP_TrackManager.Models
         public int TrainingTrainingId { get; set; }
         public int? MemberMemberId { get; set; }
 
-        public virtual Member? MemberMember { get; set; }
-        public virtual training TrainingTraining { get; set; } = null!;
+        public virtual Member MemberMember { get; set; }
+        public virtual training TrainingTraining { get; set; }
     }
 }

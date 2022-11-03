@@ -1,51 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+
+#nullable disable
 
 namespace AKP_TrackManager.Models
 {
     public partial class AKP_TrackManager_devContext : DbContext
     {
-        public AKP_TrackManager_devContext()
-        {
-        }
 
         public AKP_TrackManager_devContext(DbContextOptions<AKP_TrackManager_devContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Accident> Accidents { get; set; } = null!;
-        public virtual DbSet<Car> Cars { get; set; } = null!;
-        public virtual DbSet<CarAccidentByMember> CarAccidentByMembers { get; set; } = null!;
-        public virtual DbSet<CarMember> CarMembers { get; set; } = null!;
-        public virtual DbSet<ClubMembership> ClubMemberships { get; set; } = null!;
-        public virtual DbSet<Lap> Laps { get; set; } = null!;
-        public virtual DbSet<Location> Locations { get; set; } = null!;
-        public virtual DbSet<Member> Members { get; set; } = null!;
-        public virtual DbSet<MemberCarOnLap> MemberCarOnLaps { get; set; } = null!;
-        public virtual DbSet<Payment> Payments { get; set; } = null!;
-        public virtual DbSet<TrackConfiguration> TrackConfigurations { get; set; } = null!;
-        public virtual DbSet<TrainingAttandance> TrainingAttandances { get; set; } = null!;
-        public virtual DbSet<training> training { get; set; } = null!;
+        public virtual DbSet<Accident> Accidents { get; set; }
+        public virtual DbSet<Car> Cars { get; set; }
+        public virtual DbSet<CarAccidentByMember> CarAccidentByMembers { get; set; }
+        public virtual DbSet<CarMember> CarMembers { get; set; }
+        public virtual DbSet<ClubMembership> ClubMemberships { get; set; }
+        public virtual DbSet<Lap> Laps { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Member> Members { get; set; }
+        public virtual DbSet<MemberCarOnLap> MemberCarOnLaps { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<TrackConfiguration> TrackConfigurations { get; set; }
+        public virtual DbSet<TrainingAttandance> TrainingAttandances { get; set; }
+        public virtual DbSet<training> training { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=PIOTRLOJKO;Initial Catalog=AKP_TrackManager_dev;Persist Security Info=True;User ID=sa");
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                optionsBuilder.UseSqlServer("Data Source=PIOTRLOJKO;Initial Catalog=AKP_TrackManager_dev;Persist Security Info=True;User ID=sa");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("Relational:Collation", "Polish_CI_AS");
+
             modelBuilder.Entity<Accident>(entity =>
             {
                 entity.ToTable("Accident");
-
-                entity.Property(e => e.AccidentId).ValueGeneratedNever();
 
                 entity.Property(e => e.AccidentDate).HasColumnType("datetime");
             });
@@ -54,15 +53,15 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("Car");
 
-                entity.Property(e => e.CarId).ValueGeneratedNever();
-
                 entity.Property(e => e.EngingeCapacity).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.Make)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Model)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
@@ -73,8 +72,6 @@ namespace AKP_TrackManager.Models
                     .HasName("CarAccidentByMember_pk");
 
                 entity.ToTable("CarAccidentByMember");
-
-                entity.Property(e => e.CarAccidentMemberId).ValueGeneratedNever();
 
                 entity.Property(e => e.AccidentAccidentId).HasColumnName("Accident_AccidentId");
 
@@ -109,7 +106,9 @@ namespace AKP_TrackManager.Models
 
                 entity.Property(e => e.CarCarId).HasColumnName("Car_CarId");
 
-                entity.Property(e => e.MemberMemberId).HasColumnName("Member_MemberId");
+                entity.Property(e => e.MemberMemberId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("Member_MemberId");
 
                 entity.HasOne(d => d.CarCar)
                     .WithMany(p => p.CarMembers)
@@ -131,8 +130,6 @@ namespace AKP_TrackManager.Models
 
                 entity.ToTable("ClubMembership");
 
-                entity.Property(e => e.MembershipId).ValueGeneratedNever();
-
                 entity.Property(e => e.FeeAmount).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.MemberMemberId).HasColumnName("Member_MemberId");
@@ -148,7 +145,11 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("Lap");
 
-                entity.Property(e => e.LapId).ValueGeneratedNever();
+                entity.Property(e => e.AbsoluteTime).HasColumnType("time(3)");
+
+                entity.Property(e => e.MeasuredTime).HasColumnType("time(3)");
+
+                entity.Property(e => e.PenaltyTime).HasColumnType("time(0)");
 
                 entity.Property(e => e.TrainingTrainingId).HasColumnName("Training_TrainingId");
 
@@ -163,17 +164,18 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("Location");
 
-                entity.Property(e => e.LocationId).ValueGeneratedNever();
-
                 entity.Property(e => e.Country)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Street)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Town)
+                    .IsRequired()
                     .HasMaxLength(150)
                     .IsUnicode(false);
             });
@@ -182,17 +184,39 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("Member");
 
-                entity.Property(e => e.MemberId).ValueGeneratedNever();
-
                 entity.Property(e => e.DateOfBirth).HasColumnType("date");
 
                 entity.Property(e => e.EmailAddress)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.PhoneNumber)
+                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RoleRoleId).HasColumnName("Role_RoleId");
+
+                entity.Property(e => e.Surname)
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.RoleRole)
+                    .WithMany(p => p.Members)
+                    .HasForeignKey(d => d.RoleRoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Member_Role");
             });
 
             modelBuilder.Entity<MemberCarOnLap>(entity =>
@@ -201,8 +225,6 @@ namespace AKP_TrackManager.Models
                     .HasName("MemberCarOnLap_pk");
 
                 entity.ToTable("MemberCarOnLap");
-
-                entity.Property(e => e.MemberLapId).ValueGeneratedNever();
 
                 entity.Property(e => e.CarCarId).HasColumnName("Car_CarId");
 
@@ -233,8 +255,6 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("Payment");
 
-                entity.Property(e => e.PaymentId).ValueGeneratedNever();
-
                 entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.ClubMembershipMembershipId).HasColumnName("ClubMembership_MembershipId");
@@ -256,6 +276,16 @@ namespace AKP_TrackManager.Models
                     .HasConstraintName("Payment_Member");
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Role");
+
+                entity.Property(e => e.RoleName)
+                    .IsRequired()
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<TrackConfiguration>(entity =>
             {
                 entity.HasKey(e => e.TrackId)
@@ -263,14 +293,14 @@ namespace AKP_TrackManager.Models
 
                 entity.ToTable("TrackConfiguration");
 
-                entity.Property(e => e.TrackId).ValueGeneratedNever();
+                entity.Property(e => e.ConfigurationTemplate)
+                    .IsRequired()
+                    .HasColumnType("image");
             });
 
             modelBuilder.Entity<TrainingAttandance>(entity =>
             {
                 entity.ToTable("TrainingAttandance");
-
-                entity.Property(e => e.TrainingAttandanceId).ValueGeneratedNever();
 
                 entity.Property(e => e.MemberMemberId).HasColumnName("Member_MemberId");
 
@@ -291,8 +321,6 @@ namespace AKP_TrackManager.Models
             modelBuilder.Entity<training>(entity =>
             {
                 entity.ToTable("Training");
-
-                entity.Property(e => e.TrainingId).ValueGeneratedNever();
 
                 entity.Property(e => e.Date).HasColumnType("date");
 

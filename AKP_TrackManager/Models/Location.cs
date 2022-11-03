@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace AKP_TrackManager.Models
 {
     public partial class Location
@@ -11,9 +13,9 @@ namespace AKP_TrackManager.Models
         }
 
         public int LocationId { get; set; }
-        public string Town { get; set; } = null!;
-        public string Street { get; set; } = null!;
-        public string Country { get; set; } = null!;
+        public string Town { get; set; }
+        public string Street { get; set; }
+        public string Country { get; set; }
 
         public virtual ICollection<training> training { get; set; }
     }
