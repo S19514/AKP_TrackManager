@@ -31,7 +31,10 @@
                             </li>
                              <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
-                        </li>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Locations" asp-action="Index">Locations</a>
+                            </li>
                         }
                         @if(User.Identity.IsAuthenticated == false)
                         {
