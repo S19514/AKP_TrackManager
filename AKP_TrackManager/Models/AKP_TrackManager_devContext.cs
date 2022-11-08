@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace AKP_TrackManager.Models
 {
     public partial class AKP_TrackManager_devContext : DbContext
-    {
+    {     
 
         public AKP_TrackManager_devContext(DbContextOptions<AKP_TrackManager_devContext> options)
             : base(options)
@@ -27,14 +27,12 @@ namespace AKP_TrackManager.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<TrackConfiguration> TrackConfigurations { get; set; }
         public virtual DbSet<TrainingAttandance> TrainingAttandances { get; set; }
-        public virtual DbSet<training> training { get; set; }
+        public virtual DbSet<Training> training { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=PIOTRLOJKO;Initial Catalog=AKP_TrackManager_dev;Persist Security Info=True;User ID=sa");
             }
         }
 
@@ -293,9 +291,11 @@ namespace AKP_TrackManager.Models
 
                 entity.ToTable("TrackConfiguration");
 
-                entity.Property(e => e.ConfigurationTemplate)
+                entity.Property(e => e.Length).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.PresetImageLink)
                     .IsRequired()
-                    .HasColumnType("image");
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<TrainingAttandance>(entity =>
@@ -318,7 +318,7 @@ namespace AKP_TrackManager.Models
                     .HasConstraintName("TrainingAttandance_Training");
             });
 
-            modelBuilder.Entity<training>(entity =>
+            modelBuilder.Entity<Training>(entity =>
             {
                 entity.ToTable("Training");
 

@@ -27,27 +27,17 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
         public IActionResult Index()
-         {
-            var x = HttpContext.User;
+        {
+            
             return View();
         }
         public IActionResult ReturnLoginView()
         {
             return View("Login");
         }
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
 
         public async Task<IActionResult> Login([Bind("Username,Password")] LoginCredentials credentials)
         {
-            //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
-            //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "edward"));
-            //identity.AddClaim(new Claim(ClaimTypes.Name, "edward zhou"));
-            ////add your own claims 
-            //var principal = new ClaimsPrincipal(identity);
-            //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
             if (credentials == null)
                 return View();
 
@@ -64,25 +54,18 @@ namespace AKP_TrackManager.Controllers
                 new Claim(ClaimTypes.Role, role.RoleName),
                 },
                 "ApplicationCookie", ClaimTypes.Email, ClaimTypes.Role);
-                //HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
-               //AuthenticationProperties authProperties = new AuthenticationProperties()
-               //{ }
+
                 await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
-
-                // HttpContext.User = new ClaimsPrincipal(claimsIdentity);
-                var x = HttpContext.User;
-                // var z = _httpContextAccessor.HttpContext.User;
                 return Redirect("/Home/Index");
             }
             return View();
         }
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
-            //return View("Login");
+            await HttpContext.SignOutAsync(); ;
             return Redirect("/Home/Login");
         }
 

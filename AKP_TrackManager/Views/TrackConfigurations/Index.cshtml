@@ -1,0 +1,54 @@
+﻿@model IEnumerable<AKP_TrackManager.Models.TrackConfiguration>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reversable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Length) in KM's
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PresetNumber) from RoadBook
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PresetImageLink)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reversable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Length)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PresetNumber)
+            </td>
+            <td>
+              <a href = @Html.DisplayFor(modelItem => item.PresetImageLink)>Image Link</a>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TrackId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TrackId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TrackId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
