@@ -198,3 +198,13 @@ C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Vie
 C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\TrackConfigurations\Details.cshtml.g.cs
 C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\TrackConfigurations\Edit.cshtml.g.cs
 C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\TrackConfigurations\Index.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\Create.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\Delete.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\Details.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\Edit.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\Index.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Laps\Create.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Laps\Delete.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Laps\Details.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Laps\Edit.cshtml.g.cs
+C:\PracaInzynierska\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Laps\Index.cshtml.g.cs
