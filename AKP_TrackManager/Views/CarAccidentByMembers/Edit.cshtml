@@ -1,0 +1,42 @@
+﻿@model AKP_TrackManager.Models.CarAccidentByMember
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>CarAccidentByMember</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CarAccidentMemberId" />
+            <div class="form-group">
+                <label asp-for="MemberMemberId" class="control-label"></label>
+                <select asp-for="MemberMemberId" class="form-control" asp-items="ViewBag.MemberMemberId"></select>
+                <span asp-validation-for="MemberMemberId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarCarId" class="control-label"></label>
+                <select asp-for="CarCarId" class="form-control" asp-items="ViewBag.CarCarId"></select>
+                <span asp-validation-for="CarCarId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccidentAccidentId" class="control-label"></label>
+                <select asp-for="AccidentAccidentId" class="form-control" asp-items="ViewBag.AccidentAccidentId"></select>
+                <span asp-validation-for="AccidentAccidentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

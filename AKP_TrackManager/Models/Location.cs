@@ -9,14 +9,15 @@ namespace AKP_TrackManager.Models
     {
         public Location()
         {
-            training = new HashSet<Training>();
+            training = new HashSet<training>();
         }
 
         public int LocationId { get; set; }
+        public string FriendlyName { get; set; }
         public string Town { get; set; }
         public string Street { get; set; }
         public string Country { get; set; }
 
-        public virtual ICollection<Training> training { get; set; }
+        public virtual ICollection<training> training { get; set; }
     }
 }

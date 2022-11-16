@@ -9,15 +9,16 @@ namespace AKP_TrackManager.Models
     {
         public TrackConfiguration()
         {
-            training = new HashSet<Training>();
+            training = new HashSet<training>();
         }
 
         public int TrackId { get; set; }
         public bool Reversable { get; set; }
         public decimal Length { get; set; }
+        public string PresetName { get; set; }
         public int PresetNumber { get; set; }
         public string PresetImageLink { get; set; }
 
-        public virtual ICollection<Training> training { get; set; }
+        public virtual ICollection<training> training { get; set; }
     }
 }

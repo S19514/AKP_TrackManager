@@ -53,7 +53,7 @@ namespace AKP_TrackManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrackId,Reversable,Length,PresetNumber,PresetImageLink")] TrackConfiguration trackConfiguration)
+        public async Task<IActionResult> Create([Bind("TrackId,Reversable,Length,PresetName,PresetNumber,PresetImageLink")] TrackConfiguration trackConfiguration)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace AKP_TrackManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrackId,Reversable,Length,PresetNumber,PresetImageLink")] TrackConfiguration trackConfiguration)
+        public async Task<IActionResult> Edit(int id, [Bind("TrackId,Reversable,Length,PresetName,PresetNumber,PresetImageLink")] TrackConfiguration trackConfiguration)
         {
             if (id != trackConfiguration.TrackId)
             {

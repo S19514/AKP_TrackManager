@@ -26,6 +26,7 @@ namespace AKP_TrackManager.Controllers
             _logger = logger;
             _context = context;
         }
+        [Authorize]
         public IActionResult Index()
         {
             
@@ -63,6 +64,7 @@ namespace AKP_TrackManager.Controllers
             }
             return View();
         }
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(); ;

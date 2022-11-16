@@ -12,6 +12,6 @@ namespace AKP_TrackManager.Models
         public int? MemberMemberId { get; set; }
 
         public virtual Member MemberMember { get; set; }
-        public virtual Training TrainingTraining { get; set; }
+        public virtual training TrainingTraining { get; set; }
     }
 }

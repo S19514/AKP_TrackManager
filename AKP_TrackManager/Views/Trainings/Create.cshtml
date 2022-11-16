@@ -1,4 +1,4 @@
-﻿@model AKP_TrackManager.Models.Training
+﻿@model AKP_TrackManager.Models.training
 
 @{
     ViewData["Title"] = "Create";
@@ -14,27 +14,27 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="TrackConfigurationTrackId" class="control-label"></label>
-                <select asp-for="TrackConfigurationTrackId" class ="form-control" asp-items="ViewBag.TrackConfigurationTrackId"></select>
+                <label asp-for="TrackConfigurationTrackId" class="control-label">Track Configuration Preset Name</label>
+                <select asp-for="TrackConfigurationTrackId" class="form-control" asp-items="ViewBag.TrackConfigurationPresetName"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input asp-for="Date" type="date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
+                <input asp-for="StartTime" type="time" class="form-control" />
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
+                <input asp-for="EndTime" type="time" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LocationLocationId" class="control-label"></label>
-                <select asp-for="LocationLocationId" class ="form-control" asp-items="ViewBag.LocationLocationId"></select>
+                <label asp-for="LocationLocationId" class="control-label">Location Friendly Name</label>
+                <select asp-for="LocationLocationId" class="form-control" asp-items="ViewBag.LocationFriendlyName"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

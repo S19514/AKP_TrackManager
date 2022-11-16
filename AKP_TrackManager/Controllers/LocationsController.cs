@@ -53,7 +53,7 @@ namespace AKP_TrackManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LocationId,Town,Street,Country")] Location location)
+        public async Task<IActionResult> Create([Bind("LocationId,FriendlyName,Town,Street,Country")] Location location)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace AKP_TrackManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LocationId,Town,Street,Country")] Location location)
+        public async Task<IActionResult> Edit(int id, [Bind("LocationId,FriendlyName,Town,Street,Country")] Location location)
         {
             if (id != location.LocationId)
             {

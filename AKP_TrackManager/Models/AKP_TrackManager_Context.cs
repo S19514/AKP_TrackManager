@@ -29,7 +29,7 @@ namespace AKP_TrackManager.Models
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<TrackConfiguration> TrackConfigurations { get; set; }
         public virtual DbSet<TrainingAttandance> TrainingAttandances { get; set; }
-        public virtual DbSet<Training> training { get; set; }
+        public virtual DbSet<training> training { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -302,7 +302,7 @@ namespace AKP_TrackManager.Models
                     .HasConstraintName("TrainingAttandance_Training");
             });
 
-            modelBuilder.Entity<Training>(entity =>
+            modelBuilder.Entity<training>(entity =>
             {
                 entity.ToTable("Training");
 

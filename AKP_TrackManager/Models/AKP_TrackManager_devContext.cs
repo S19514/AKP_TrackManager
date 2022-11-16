@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace AKP_TrackManager.Models
 {
     public partial class AKP_TrackManager_devContext : DbContext
-    {     
-
+    {
         public AKP_TrackManager_devContext(DbContextOptions<AKP_TrackManager_devContext> options)
             : base(options)
         {
@@ -27,7 +26,7 @@ namespace AKP_TrackManager.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<TrackConfiguration> TrackConfigurations { get; set; }
         public virtual DbSet<TrainingAttandance> TrainingAttandances { get; set; }
-        public virtual DbSet<Training> training { get; set; }
+        public virtual DbSet<training> training { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -167,6 +166,11 @@ namespace AKP_TrackManager.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FriendlyName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Street)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -296,6 +300,11 @@ namespace AKP_TrackManager.Models
                 entity.Property(e => e.PresetImageLink)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.PresetName)
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TrainingAttandance>(entity =>
@@ -318,7 +327,7 @@ namespace AKP_TrackManager.Models
                     .HasConstraintName("TrainingAttandance_Training");
             });
 
-            modelBuilder.Entity<Training>(entity =>
+            modelBuilder.Entity<training>(entity =>
             {
                 entity.ToTable("Training");
 

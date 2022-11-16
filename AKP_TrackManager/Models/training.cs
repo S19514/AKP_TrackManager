@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace AKP_TrackManager.Models
 {
-    public partial class Training
+    public partial class training
     {
-        public Training()
+        public training()
         {
             Laps = new HashSet<Lap>();
             TrainingAttandances = new HashSet<TrainingAttandance>();

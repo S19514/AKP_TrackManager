@@ -18,7 +18,7 @@ namespace AKP_TrackManager.Models
         public TimeSpan AbsoluteTime { get; set; }
         public int TrainingTrainingId { get; set; }
 
-        public virtual Training TrainingTraining { get; set; }
+        public virtual training TrainingTraining { get; set; }
         public virtual ICollection<MemberCarOnLap> MemberCarOnLaps { get; set; }
     }
 }

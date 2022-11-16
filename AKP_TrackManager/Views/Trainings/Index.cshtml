@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.Training>
+﻿@model IEnumerable<AKP_TrackManager.Models.training>
 
 @{
     ViewData["Title"] = "Index";
@@ -23,10 +23,10 @@
                 @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LocationLocation)
+                @Html.DisplayNameFor(model => model.LocationLocation.FriendlyName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrackConfigurationTrack)
+                @Html.DisplayNameFor(model => model.TrackConfigurationTrack.PresetName)
             </th>
             <th></th>
         </tr>
@@ -44,10 +44,10 @@
                 @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LocationLocation.Country)
+                @Html.DisplayFor(modelItem => item.LocationLocation.FriendlyName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.TrackId)
+                @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.PresetName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.TrainingId">Edit</a> |
