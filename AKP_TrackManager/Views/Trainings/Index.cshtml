@@ -5,11 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h1>Trainings</h1>
+ @if(User.IsInRole("Admin"))
+{
+    
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add New Training</a>
+    </p>
+    
+}
 <table class="table">
     <thead>
         <tr>
@@ -17,16 +21,16 @@
                 @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTime)
+                Start Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndTime)
+                End Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LocationLocation.FriendlyName)
+             Location Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrackConfigurationTrack.PresetName)
+                Preset Name
             </th>
             <th></th>
         </tr>
@@ -35,7 +39,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Date)
+                @item.Date.ToString("dd.MM.yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartTime)
@@ -50,9 +54,13 @@
                 @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.PresetName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.TrainingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TrainingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TrainingId">Delete</a>
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingId">Details</a>
+                    <form><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@item.TrainingId">Sign For Training</a></form>
+                @if(User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.TrainingId">Edit</a> 
+                    <a asp-action="Delete" class="btn btn-primary" asp-route-id="@item.TrainingId">Delete</a>
+                }
             </td>
         </tr>
 }

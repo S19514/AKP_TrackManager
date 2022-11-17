@@ -15,13 +15,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TrainingId" />
             <div class="form-group">
-                <label asp-for="TrackConfigurationTrackId" class="control-label"></label>
-                <select asp-for="TrackConfigurationTrackId" class="form-control" asp-items="ViewBag.TrackConfigurationTrackId"></select>
+                <label asp-for="TrackConfigurationTrackId" class="control-label">Track Configuration Preset Name</label>
+                <select asp-for="TrackConfigurationTrackId" class="form-control" asp-items="ViewBag.TrackConfigurationPresetName"></select>
                 <span asp-validation-for="TrackConfigurationTrackId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input asp-for="Date" type="date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,8 +35,8 @@
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LocationLocationId" class="control-label"></label>
-                <select asp-for="LocationLocationId" class="form-control" asp-items="ViewBag.LocationLocationId"></select>
+                <label asp-for="LocationLocationId" class="control-label">Location Friendly Name</label>
+                <select asp-for="LocationLocationId" class="form-control" asp-items="ViewBag.LocationFriendlyName"></select>
                 <span asp-validation-for="LocationLocationId" class="text-danger"></span>
             </div>
             <div class="form-group">

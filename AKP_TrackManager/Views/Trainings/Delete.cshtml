@@ -31,16 +31,16 @@
             @Html.DisplayFor(model => model.EndTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LocationLocation)
+            @Html.DisplayNameFor(model => model.LocationLocation.FriendlyName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LocationLocation.Country)
+            @Html.DisplayFor(model => model.LocationLocation.FriendlyName)
         </dd class>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TrackConfigurationTrack)
+            @Html.DisplayNameFor(model => model.TrackConfigurationTrack.PresetName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrackConfigurationTrack.PresetImageLink)
+            @Html.DisplayFor(model => model.TrackConfigurationTrack.PresetName)
         </dd class>
     </dl>
     

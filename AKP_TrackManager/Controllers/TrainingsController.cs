@@ -18,7 +18,6 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: trainings
         public async Task<IActionResult> Index()
         {
             var aKP_TrackManager_devContext = _context.training.Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);
@@ -26,7 +25,6 @@ namespace AKP_TrackManager.Controllers
             return View(await aKP_TrackManager_devContext.ToListAsync());
         }
 
-        // GET: trainings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,19 +44,39 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
-        // GET: trainings/Create
         public IActionResult Create()
         {
-            var tc = _context.TrackConfigurations.ToList();
-            var lc = _context.Locations.ToList();
             ViewData["LocationFriendlyName"] = new SelectList(_context.Locations, "LocationId", "FriendlyName");
             ViewData["TrackConfigurationPresetName"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetName");
             return View();
         }
+        //public IActionResult SignUpForTraining()
+        //{
+        //    ViewData["TrainingDate"] = new SelectList(_context.training, "TrainingId", "Date");
+        //    return View();
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> SingUpForTraining(int? id)
+        {
+           
+                var training = _context.training.Where(t=> t.TrainingId == id).FirstOrDefault();
+                var member = _context.Members.Where(m=>m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var trainingAttandance = new TrainingAttandance
+                {
+                    MemberMemberId = member.MemberId,
+                    TrainingTrainingId = training.TrainingId,
+                };
+                _context.Add(trainingAttandance);
+                await _context.SaveChangesAsync();
+            var x = trainingAttandance.TrainingAttandanceId;
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "TrainingAttandances", trainingAttandance.TrainingAttandanceId);
+            
 
-        // POST: trainings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            //return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TrainingId,TrackConfigurationTrackId,Date,StartTime,EndTime,LocationLocationId")] training training)
@@ -69,12 +87,11 @@ namespace AKP_TrackManager.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationLocationId"] = new SelectList(_context.Locations, "LocationId", "Country", training.LocationLocationId);
-            ViewData["TrackConfigurationTrackId"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetImageLink", training.TrackConfigurationTrackId);
+            ViewData["LocationFriendlyName"] = new SelectList(_context.Locations, "LocationId", "FriendlyName", training.LocationLocationId);
+            ViewData["TrackConfigurationPresetName"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetName", training.TrackConfigurationTrackId);
             return View(training);
         }
 
-        // GET: trainings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,14 +104,11 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocationLocationId"] = new SelectList(_context.Locations, "LocationId", "Country", training.LocationLocationId);
-            ViewData["TrackConfigurationTrackId"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetImageLink", training.TrackConfigurationTrackId);
+            ViewData["LocationFriendlyName"] = new SelectList(_context.Locations, "LocationId", "FriendlyName", training.LocationLocationId);
+            ViewData["TrackConfigurationPresetName"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetName", training.TrackConfigurationTrackId);
             return View(training);
         }
 
-        // POST: trainings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TrainingId,TrackConfigurationTrackId,Date,StartTime,EndTime,LocationLocationId")] training training)
@@ -124,12 +138,11 @@ namespace AKP_TrackManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationLocationId"] = new SelectList(_context.Locations, "LocationId", "Country", training.LocationLocationId);
-            ViewData["TrackConfigurationTrackId"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetImageLink", training.TrackConfigurationTrackId);
+            ViewData["LocationFriendlyName"] = new SelectList(_context.Locations, "LocationId", "FriendlyName", training.LocationLocationId);
+            ViewData["TrackConfigurationPresetName"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetName", training.TrackConfigurationTrackId);
             return View(training);
         }
 
-        // GET: trainings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,7 +162,6 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
-        // POST: trainings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

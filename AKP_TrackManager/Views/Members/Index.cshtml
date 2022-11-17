@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Członkowie Automobilklubu</h1>
+<h1>Automobilklub Members</h1>
 
 <p>    
-    <a asp-action="Create" class="btn btn-primary">Dodaj nowego członka  </a>
+    <a asp-action="Create" class="btn btn-primary">Add New Member</a>
 </p>
 
 <table class="table">
@@ -20,22 +20,22 @@
                 @Html.DisplayNameFor(model => model.Surname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
+                Date Of Birth
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
+                Phone Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
+                Email Address
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsAscendant)
+                Ascendant
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsStudent)
+                Student
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleRole)
+                Role
             </th>
             <th></th>
         </tr>
@@ -51,7 +51,7 @@
                     @Html.DisplayFor(modelItem => item.Surname)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                    @item.DateOfBirth.ToString("dd.MM.yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
@@ -69,9 +69,12 @@
                     @Html.DisplayFor(modelItem => item.RoleRole.RoleName)
                 </td>
                 <td>
-                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.MemberId">Edit</a>
                     <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.MemberId">Details</a>
+                     @if(User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.MemberId">Edit</a>
                     <a asp-action="Delete" class="btn btn-primary" asp-route-id="@item.MemberId">Delete</a>
+                }
                 </td>
             </tr>
         }

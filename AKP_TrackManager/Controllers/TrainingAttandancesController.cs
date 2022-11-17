@@ -18,14 +18,23 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: TrainingAttandances
         public async Task<IActionResult> Index()
         {
-            var aKP_TrackManager_devContext = _context.TrainingAttandances.Include(t => t.MemberMember).Include(t => t.TrainingTraining);
-            return View(await aKP_TrackManager_devContext.ToListAsync());
+            //var member = _context.Members.Where(m=> m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+            if (HttpContext.User.IsInRole("Admin"))
+            {
+                //var role = _context.Roles.Where
+                var aKP_TrackManager_devContext = _context.TrainingAttandances.Include(t => t.MemberMember).Include(t => t.TrainingTraining);
+                return View(await aKP_TrackManager_devContext.ToListAsync());
+            }
+            else
+            {
+                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var aKP_TrackManager_devContext = _context.TrainingAttandances.Include(t => t.MemberMember).Include(t => t.TrainingTraining).Where(t=>t.MemberMemberId == member.MemberId);
+                return View(await aKP_TrackManager_devContext.ToListAsync());
+            }
         }
 
-        // GET: TrainingAttandances/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,7 +54,6 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
-        // GET: TrainingAttandances/Create
         public IActionResult Create()
         {
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
@@ -53,9 +61,6 @@ namespace AKP_TrackManager.Controllers
             return View();
         }
 
-        // POST: TrainingAttandances/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TrainingAttandanceId,TrainingTrainingId,MemberMemberId")] TrainingAttandance trainingAttandance)
@@ -71,7 +76,6 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
-        // GET: TrainingAttandances/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,9 +93,6 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
-        // POST: TrainingAttandances/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TrainingAttandanceId,TrainingTrainingId,MemberMemberId")] TrainingAttandance trainingAttandance)

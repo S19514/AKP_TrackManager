@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,7 +40,7 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAscendant" /> @Html.DisplayNameFor(model => model.IsAscendant)
+                    <input class="form-check-input" asp-for="IsAscendant" /> Ascendant
                 </label>
             </div>
             <div class="form-group">
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsStudent" /> @Html.DisplayNameFor(model => model.IsStudent)
+                    <input class="form-check-input" asp-for="IsStudent" /> Student
                 </label>
             </div>
             <div class="form-group">
