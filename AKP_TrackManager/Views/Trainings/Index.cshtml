@@ -56,7 +56,15 @@
             <td>
                     <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingId">Details</a>
                     <form><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@item.TrainingId">Sign For Training</a></form>
-                @if(User.IsInRole("Admin"))
+                    @if (ViewBag.Message != null)
+                    {
+                        <script type="text/javascript">
+                            window.onload = function () {
+                                alert("@ViewBag.Message");
+                            };
+                        </script>
+                    }
+                    @if(User.IsInRole("Admin"))
                 {
                     <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.TrainingId">Edit</a> 
                     <a asp-action="Delete" class="btn btn-primary" asp-route-id="@item.TrainingId">Delete</a>

@@ -30,9 +30,6 @@ namespace AKP_TrackManager.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,6 +58,12 @@ namespace AKP_TrackManager.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RegPlate)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
             });
 
             modelBuilder.Entity<CarAccidentByMember>(entity =>
@@ -192,6 +195,8 @@ namespace AKP_TrackManager.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.IsBlocked).HasColumnName("isBlocked");
 
                 entity.Property(e => e.Name)
                     .IsRequired()

@@ -19,12 +19,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Surname)
             </th>
-            <th>
+      @*      <th>
                 Date Of Birth
             </th>
             <th>
                 Phone Number
-            </th>
+            </th>*@
             <th>
                 Email Address
             </th>
@@ -33,6 +33,9 @@
             </th>
             <th>
                 Student
+            </th>
+            <th>
+                Blocked
             </th>
             <th>
                 Role
@@ -50,12 +53,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Surname)
                 </td>
-                <td>
+               @* <td>
                     @item.DateOfBirth.ToString("dd.MM.yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.EmailAddress)
                 </td>
@@ -66,14 +69,17 @@
                     @Html.DisplayFor(modelItem => item.IsStudent)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.IsBlocked)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.RoleRole.RoleName)
                 </td>
                 <td>
                     <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.MemberId">Details</a>
                      @if(User.IsInRole("Admin"))
                 {
-                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.MemberId">Edit</a>
-                    <a asp-action="Delete" class="btn btn-primary" asp-route-id="@item.MemberId">Delete</a>
+                    <a asp-action="Edit" class="btn btn-secondary" asp-route-id="@item.MemberId">Edit</a>
+                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.MemberId">Delete</a>
                 }
                 </td>
             </tr>

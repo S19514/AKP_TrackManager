@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using AKP_TrackManager.Models.DTO;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -32,33 +33,62 @@ namespace AKP_TrackManager.Controllers
                 return NotFound();
             }
 
-            var accident = await _context.Accidents
-                .FirstOrDefaultAsync(m => m.AccidentId == id);
+            var accident = await _context.Accidents.FirstOrDefaultAsync(m => m.AccidentId == id);
+            var carAccidentByMember = await _context.CarAccidentByMembers.FirstOrDefaultAsync(m=>m.AccidentAccidentId==id);
+            var car = await _context.Cars.FirstOrDefaultAsync(m => m.CarId == carAccidentByMember.CarCarId);
+            var member = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == carAccidentByMember.MemberMemberId);
+            var accidentCarMemberDto = new AccidentCarMemberDto()
+            {
+                AccidentDate = accident.AccidentDate,
+                AccidentId = accident.AccidentId,
+                AnyoneInjured = accident.AnyoneInjured,
+                Severity = accident.Severity,
+                CarId = car.CarId,
+                MemberId = member.MemberId,
+                EmailAddress = member.EmailAddress,
+                RegPlate = car.RegPlate
+            };
+
+
             if (accident == null)
             {
                 return NotFound();
             }
 
-            return View(accident);
+            return View(accidentCarMemberDto);
         }
 
         // GET: Accidents/Create
         public IActionResult Create()
         {
+            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate");
             return View();
         }
-
-        // POST: Accidents/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccidentId,AccidentDate,Severity,AnyoneInjured")] Accident accident)
+        public async Task<IActionResult> Create([Bind("AccidentId,AccidentDate,Severity,AnyoneInjured,MemberId,CarId")] AccidentCarMemberDto accident)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(accident);
+                var postAccident = new Accident()
+                {
+                    AccidentDate = accident.AccidentDate,
+                    AnyoneInjured = accident.AnyoneInjured,
+                    Severity = accident.Severity
+                };
+                _context.Add(postAccident);
                 await _context.SaveChangesAsync();
+
+                var carAccidentByMember = new CarAccidentByMember()
+                {
+                    AccidentAccidentId = postAccident.AccidentId,
+                    CarCarId = accident.CarId,
+                    MemberMemberId = accident.MemberId
+                };
+                _context.Add(carAccidentByMember);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(accident);
@@ -139,7 +169,10 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var accident = await _context.Accidents.FindAsync(id);
+            var carAccidentByMember = await _context.CarAccidentByMembers.Where(cabm => cabm.AccidentAccidentId == accident.AccidentId).FirstOrDefaultAsync();
+            _context.CarAccidentByMembers.Remove(carAccidentByMember);
             _context.Accidents.Remove(accident);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

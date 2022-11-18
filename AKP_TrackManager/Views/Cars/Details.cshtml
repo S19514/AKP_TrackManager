@@ -24,20 +24,26 @@
             @Html.DisplayFor(model => model.Model)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EngingeCapacity)
+            Engine Capacity(CCM)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EngingeCapacity)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EnginePower)
+            Engine Power(HP)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EnginePower)
         </dd>
+        <dt class="col-sm-2">
+            Registration Plate
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegPlate)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.CarId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.CarId">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

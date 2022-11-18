@@ -25,14 +25,19 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EngingeCapacity" class="control-label"></label>
+                <label asp-for="EngingeCapacity" class="control-label">Engine Capacity(CCM)</label>
                 <input asp-for="EngingeCapacity" class="form-control" />
                 <span asp-validation-for="EngingeCapacity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EnginePower" class="control-label"></label>
+                <label asp-for="EnginePower" class="control-label">Engine Power(HP)</label>
                 <input asp-for="EnginePower" class="form-control" />
                 <span asp-validation-for="EnginePower" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegPlate" class="control-label">Registration Plate</label>
+                <input asp-for="RegPlate" class="form-control" />
+                <span asp-validation-for="RegPlate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -42,6 +47,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 

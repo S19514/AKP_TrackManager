@@ -27,6 +27,7 @@ namespace AKP_TrackManager.Models
         public string Password { get; set; }
         public bool IsStudent { get; set; }
         public int RoleRoleId { get; set; }
+        public bool IsBlocked { get; set; }
 
         public virtual Role RoleRole { get; set; }
         public virtual ICollection<CarAccidentByMember> CarAccidentByMembers { get; set; }

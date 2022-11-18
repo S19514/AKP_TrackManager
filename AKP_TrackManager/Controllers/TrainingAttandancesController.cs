@@ -20,19 +20,27 @@ namespace AKP_TrackManager.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var member = _context.Members.Where(m=> m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
-            if (HttpContext.User.IsInRole("Admin"))
-            {
-                //var role = _context.Roles.Where
-                var aKP_TrackManager_devContext = _context.TrainingAttandances.Include(t => t.MemberMember).Include(t => t.TrainingTraining);
-                return View(await aKP_TrackManager_devContext.ToListAsync());
-            }
-            else
-            {
-                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
-                var aKP_TrackManager_devContext = _context.TrainingAttandances.Include(t => t.MemberMember).Include(t => t.TrainingTraining).Where(t=>t.MemberMemberId == member.MemberId);
-                return View(await aKP_TrackManager_devContext.ToListAsync());
-            }
+            
+                if (HttpContext.User.IsInRole("Admin"))
+                {                   
+                    var aKP_TrackManager_devContext = _context.TrainingAttandances
+                                                                .Include(t => t.MemberMember)
+                                                                .Include(t => t.TrainingTraining)
+                                                                .Include(t => t.TrainingTraining.LocationLocation);
+                    return View(await aKP_TrackManager_devContext.ToListAsync());
+                }
+                else
+                {
+                    var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                    var aKP_TrackManager_devContext = _context.TrainingAttandances
+                                                                .Include(t => t.MemberMember)
+                                                                .Include(t => t.TrainingTraining)
+                                                                .Include(t => t.TrainingTraining.LocationLocation)
+                                                                .Where(t => t.MemberMemberId == member.MemberId);
+                    return View(await aKP_TrackManager_devContext.ToListAsync());
+                }
+            
+            
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -45,6 +53,7 @@ namespace AKP_TrackManager.Controllers
             var trainingAttandance = await _context.TrainingAttandances
                 .Include(t => t.MemberMember)
                 .Include(t => t.TrainingTraining)
+                .Include(t => t.TrainingTraining.LocationLocation)
                 .FirstOrDefaultAsync(m => m.TrainingAttandanceId == id);
             if (trainingAttandance == null)
             {
@@ -138,6 +147,7 @@ namespace AKP_TrackManager.Controllers
             var trainingAttandance = await _context.TrainingAttandances
                 .Include(t => t.MemberMember)
                 .Include(t => t.TrainingTraining)
+                .Include(t => t.TrainingTraining.LocationLocation)
                 .FirstOrDefaultAsync(m => m.TrainingAttandanceId == id);
             if (trainingAttandance == null)
             {

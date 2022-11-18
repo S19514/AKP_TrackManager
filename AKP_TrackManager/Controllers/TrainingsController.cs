@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using System.Xml.Linq;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -59,9 +60,14 @@ namespace AKP_TrackManager.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SingUpForTraining(int? id)
         {
-           
-                var training = _context.training.Where(t=> t.TrainingId == id).FirstOrDefault();
-                var member = _context.Members.Where(m=>m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+
+            var training = _context.training.Where(t => t.TrainingId == id).FirstOrDefault();
+            var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+            var trainingAttandanceHistory = _context.TrainingAttandances
+                                                    .Where(ta => ta.MemberMemberId == member.MemberId && ta.TrainingTrainingId == training.TrainingId)
+                                                    .FirstOrDefault();
+            if (trainingAttandanceHistory == null)
+            {
                 var trainingAttandance = new TrainingAttandance
                 {
                     MemberMemberId = member.MemberId,
@@ -69,12 +75,12 @@ namespace AKP_TrackManager.Controllers
                 };
                 _context.Add(trainingAttandance);
                 await _context.SaveChangesAsync();
-            var x = trainingAttandance.TrainingAttandanceId;
-                //return RedirectToAction(nameof(Index));
-                return RedirectToAction("Details", "TrainingAttandances", trainingAttandance.TrainingAttandanceId);
-            
-
-            //return View();
+                var x = trainingAttandance.TrainingAttandanceId;
+;
+                return RedirectToAction("Index", "TrainingAttandances");
+            }
+            else 
+                return RedirectToAction("Index", "TrainingAttandances");
         }
 
         [HttpPost]

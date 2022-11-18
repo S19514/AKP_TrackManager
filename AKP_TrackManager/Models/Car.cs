@@ -19,6 +19,7 @@ namespace AKP_TrackManager.Models
         public string Model { get; set; }
         public decimal EngingeCapacity { get; set; }
         public int EnginePower { get; set; }
+        public string RegPlate { get; set; }
 
         public virtual ICollection<CarAccidentByMember> CarAccidentByMembers { get; set; }
         public virtual ICollection<CarMember> CarMembers { get; set; }
