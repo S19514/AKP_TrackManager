@@ -51,13 +51,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["TrackConfigurationPresetName"] = new SelectList(_context.TrackConfigurations, "TrackId", "PresetName");
             return View();
         }
-        //public IActionResult SignUpForTraining()
-        //{
-        //    ViewData["TrainingDate"] = new SelectList(_context.training, "TrainingId", "Date");
-        //    return View();
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+
         public async Task<IActionResult> SingUpForTraining(int? id)
         {
             var training = _context.training.Where(t => t.TrainingId == id).FirstOrDefault();

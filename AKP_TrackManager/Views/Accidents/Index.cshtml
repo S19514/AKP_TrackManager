@@ -4,21 +4,31 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Accident</a>
-</p>
+@if(User.IsInRole("Admin"))
+        {
+<h1>Accidents</h1>
+        }
+        @if(User.IsInRole("User")){
+            <h1>Your Accidents</h1>
+        }
+<thead>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add New Accident</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="IndexFilterAdmin" class="btn btn-secondary">Show Only Yours</a>
+                <a asp-action="Index" class="btn btn-success">Show All</a>
+        }
+    </p>
+</thead>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AccidentDate)
+                Accident Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Severity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnyoneInjured)
+                Someone Injured
             </th>
             <th></th>
         </tr>
@@ -27,10 +37,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AccidentDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Severity)
+                @item.AccidentDate.ToString("dd.MM.yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AnyoneInjured)

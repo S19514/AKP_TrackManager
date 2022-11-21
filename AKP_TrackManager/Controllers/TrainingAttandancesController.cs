@@ -38,9 +38,7 @@ namespace AKP_TrackManager.Controllers
                                                                 .Include(t => t.TrainingTraining.LocationLocation)
                                                                 .Where(t => t.MemberMemberId == member.MemberId);
                     return View(await aKP_TrackManager_devContext.ToListAsync());
-                }
-            
-            
+                }                        
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -136,7 +134,6 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
-        // GET: TrainingAttandances/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,7 +154,6 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
-        // POST: TrainingAttandances/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

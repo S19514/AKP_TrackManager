@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 
+///Generic controller with poor chance of being used
+///
 namespace AKP_TrackManager.Controllers
 {
     public class CarAccidentByMembersController : Controller
@@ -18,14 +20,12 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: CarAccidentByMembers
         public async Task<IActionResult> Index()
         {
             var aKP_TrackManager_devContext = _context.CarAccidentByMembers.Include(c => c.AccidentAccident).Include(c => c.CarCar).Include(c => c.MemberMember);
             return View(await aKP_TrackManager_devContext.ToListAsync());
         }
 
-        // GET: CarAccidentByMembers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,7 +46,6 @@ namespace AKP_TrackManager.Controllers
             return View(carAccidentByMember);
         }
 
-        // GET: CarAccidentByMembers/Create
         public IActionResult Create()
         {
             ViewData["AccidentAccidentId"] = new SelectList(_context.Accidents, "AccidentId", "AccidentId");
@@ -55,9 +54,6 @@ namespace AKP_TrackManager.Controllers
             return View();
         }
 
-        // POST: CarAccidentByMembers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CarAccidentMemberId,MemberMemberId,CarCarId,AccidentAccidentId")] CarAccidentByMember carAccidentByMember)
@@ -74,7 +70,6 @@ namespace AKP_TrackManager.Controllers
             return View(carAccidentByMember);
         }
 
-        // GET: CarAccidentByMembers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,9 +88,6 @@ namespace AKP_TrackManager.Controllers
             return View(carAccidentByMember);
         }
 
-        // POST: CarAccidentByMembers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CarAccidentMemberId,MemberMemberId,CarCarId,AccidentAccidentId")] CarAccidentByMember carAccidentByMember)
@@ -131,7 +123,6 @@ namespace AKP_TrackManager.Controllers
             return View(carAccidentByMember);
         }
 
-        // GET: CarAccidentByMembers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,7 +143,6 @@ namespace AKP_TrackManager.Controllers
             return View(carAccidentByMember);
         }
 
-        // POST: CarAccidentByMembers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
