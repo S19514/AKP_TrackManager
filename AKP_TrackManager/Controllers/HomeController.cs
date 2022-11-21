@@ -29,11 +29,16 @@ namespace AKP_TrackManager.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            
+
             return View();
         }
         public IActionResult ReturnLoginView()
         {
+            if (HttpContext.User.Identity.IsAuthenticated) // user is logged - session did not time out 
+            {
+                return Redirect("Home/Index");
+            }
+
             return View("Login");
         }
 

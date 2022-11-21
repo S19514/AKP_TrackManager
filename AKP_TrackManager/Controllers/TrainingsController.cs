@@ -60,7 +60,6 @@ namespace AKP_TrackManager.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SingUpForTraining(int? id)
         {
-
             var training = _context.training.Where(t => t.TrainingId == id).FirstOrDefault();
             var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
             var trainingAttandanceHistory = _context.TrainingAttandances
@@ -73,14 +72,17 @@ namespace AKP_TrackManager.Controllers
                     MemberMemberId = member.MemberId,
                     TrainingTrainingId = training.TrainingId,
                 };
+
                 _context.Add(trainingAttandance);
                 await _context.SaveChangesAsync();
                 var x = trainingAttandance.TrainingAttandanceId;
-;
+                ;
                 return RedirectToAction("Index", "TrainingAttandances");
             }
-            else 
-                return RedirectToAction("Index", "TrainingAttandances");
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]

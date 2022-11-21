@@ -1,11 +1,9 @@
-﻿@model AKP_TrackManager.Models.Accident
+﻿@model AKP_TrackManager.Models.DTO.AccidentCarMemberDto
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Edit</h1>
 
 <h4>Accident</h4>
 <hr />
@@ -15,7 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AccidentId" />
             <div class="form-group">
-                <label asp-for="AccidentDate" class="control-label"></label>
+                <label asp-for="AccidentDate" class="control-label">Accident Date</label>
                 <input asp-for="AccidentDate" class="form-control" />
                 <span asp-validation-for="AccidentDate" class="text-danger"></span>
             </div>
@@ -26,9 +24,17 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="AnyoneInjured" /> @Html.DisplayNameFor(model => model.AnyoneInjured)
+                    <input class="form-check-input" asp-for="AnyoneInjured" />Someone Injured
                 </label>
             </div>
+             <div class="form-group">
+                    <label asp-for="MemberId" class="control-label">Email Address</label>
+                    <select asp-for="MemberId" class="form-control" asp-items="ViewBag.EmailAddress"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarId" class="control-label">Registration Plate</label>
+                    <select asp-for="CarId" class="form-control" asp-items="ViewBag.RegPlate"></select>
+                </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -37,6 +43,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
 </div>
 
