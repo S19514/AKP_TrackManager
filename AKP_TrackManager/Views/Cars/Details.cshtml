@@ -1,4 +1,4 @@
-﻿@model AKP_TrackManager.Models.Car
+﻿@model AKP_TrackManager.Models.DTO.CarMemberDto
 
 @{
     ViewData["Title"] = "Details";
@@ -40,6 +40,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RegPlate)
+        </dd>
+        <dt class="col-sm-2">
+            Owner
+        </dt>
+        <dd class="col-sm-10">
+            @string.Join(" ",Model.Name,Model.Surname)
         </dd>
     </dl>
 </div>

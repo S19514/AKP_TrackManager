@@ -8,12 +8,12 @@
 
 <h1>Training Details</h1>
    
-        <form>
+        
     <p>
-            <a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@Model.TrainingId">Sign For Training</a>
+    <form>  <a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@Model.TrainingId">Sign For Training</a></form>
             @*@Html.ActionLink("Sign For Training","SignUpForTraining","trainings",Model.TrainingId)*@
         </p>
-            </form>
+            
    
 
 <div>
@@ -53,10 +53,6 @@
     </dl>
 </div>
 <div>
-     @if(User.IsInRole("Admin"))
-    {
-        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.TrainingId">Edit</a>
-    }
-    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
     
 </div>

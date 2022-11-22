@@ -20,12 +20,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
-            <th>
+         @*   <th>
                 Start Time
             </th>
             <th>
                 End Time
-            </th>
+            </th>*@
             <th>
              Location Name
             </th>
@@ -41,12 +41,12 @@
             <td>
                 @item.Date.ToString("dd.MM.yyyy")
             </td>
-            <td>
+@*            <td>
                 @Html.DisplayFor(modelItem => item.StartTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.LocationLocation.FriendlyName)
             </td>
@@ -54,8 +54,11 @@
                 @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.PresetName)
             </td>
             <td>
+
                     <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingId">Details</a>
-                    <form><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@item.TrainingId">Sign Up</a></form>             
+                   
+                        @*<form><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@item.TrainingId">Sign</a></form>*@
+                    
                     @if(User.IsInRole("Admin"))
                     {
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.TrainingId">Edit</a> 

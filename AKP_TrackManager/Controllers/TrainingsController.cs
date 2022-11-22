@@ -70,7 +70,7 @@ namespace AKP_TrackManager.Controllers
                 _context.Add(trainingAttandance);
                 await _context.SaveChangesAsync();
                 var x = trainingAttandance.TrainingAttandanceId;
-                ;
+                
                 return RedirectToAction("Index", "TrainingAttandances");
             }
             else

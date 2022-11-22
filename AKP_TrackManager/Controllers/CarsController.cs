@@ -147,16 +147,42 @@ namespace AKP_TrackManager.Controllers
             if (id == null)
             {
                 return NotFound();
-            }
-
-            var car = await _context.Cars
-                .FirstOrDefaultAsync(m => m.CarId == id);
+            }            
+            var car = await _context.Cars.FindAsync(id);
             if (car == null)
             {
                 return NotFound();
             }
+            var carMember = await _context.CarMembers.Where(c => c.CarCarId == id).FirstOrDefaultAsync();
+            if (carMember == null)
+            {
+                return NotFound();
+            }
+            var member = await _context.Members.FindAsync(carMember.MemberMemberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+            var carMemberDto = new CarMemberDto
+            {
+                CarId = car.CarId,
+                DateOfBirth = member.DateOfBirth,
+                EmailAddress = member.EmailAddress.Replace(" ", ""),
+                EnginePower = car.EnginePower,
+                EngingeCapacity = car.EngingeCapacity,
+                IsAscendant = member.IsAscendant,
+                IsBlocked = member.IsBlocked,
+                IsStudent = member.IsStudent,
+                MemberId = member.MemberId,
+                Name = member.Name.Trim(),
+                Make = car.Make.Trim(),
+                Model = car.Model.Trim(),
+                PhoneNumber = member.PhoneNumber.Trim(),
+                Surname = member.Surname.Trim(),
+                RegPlate = car.RegPlate.Replace(" ", "")
+            };
 
-            return View(car);
+            return View(carMemberDto);
         }
 
         public IActionResult Create()
@@ -192,6 +218,7 @@ namespace AKP_TrackManager.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress",pCarMember.MemberId);
             return View(pCarMember);
         }
 
@@ -279,6 +306,7 @@ namespace AKP_TrackManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", pCarMemberDto.MemberId);            
             return View(pCarMemberDto);
         }
 
@@ -304,7 +332,10 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.FindAsync(id);
+            var carMember = await _context.CarMembers.Where(cm=>cm.CarCarId == id).FirstOrDefaultAsync();
+            _context.CarMembers.Remove(carMember);
             _context.Cars.Remove(car);
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

@@ -71,9 +71,26 @@ namespace AKP_TrackManager.Controllers
             }
 
             var accident = await _context.Accidents.FirstOrDefaultAsync(m => m.AccidentId == id);
+            if (accident == null)
+            {
+                return NotFound();
+            }
             var carAccidentByMember = await _context.CarAccidentByMembers.FirstOrDefaultAsync(m=>m.AccidentAccidentId==id);
+            if(carAccidentByMember == null)
+            {
+                return NotFound();
+            }
             var car = await _context.Cars.FirstOrDefaultAsync(m => m.CarId == carAccidentByMember.CarCarId);
+            if (car == null)
+            {
+                return NotFound();
+            }
             var member = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == carAccidentByMember.MemberMemberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
             var accidentCarMemberDto = new AccidentCarMemberDto()
             {
                 AccidentDate = accident.AccidentDate,
@@ -85,12 +102,7 @@ namespace AKP_TrackManager.Controllers
                 EmailAddress = member.EmailAddress,
                 RegPlate = car.RegPlate
             };
-
-
-            if (accident == null)
-            {
-                return NotFound();
-            }
+            
 
             return View(accidentCarMemberDto);
         }
