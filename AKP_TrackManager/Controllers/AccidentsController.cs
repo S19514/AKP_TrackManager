@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
+using System.Data;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -19,7 +20,6 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: Accidents
         public async Task<IActionResult> Index()
         {
             if (HttpContext.User.IsInRole("Admin"))
@@ -28,16 +28,41 @@ namespace AKP_TrackManager.Controllers
             }
             else
             {
-                //var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
-                //var carAccidentByMember = await _context.CarAccidentByMembers.Where(c=>c.MemberMemberId== member.MemberId).ToListAsync();
-                //var aKp_TrackManager_devContext = _context.Accidents
-                return View(await _context.Accidents.ToListAsync());
-                /// todo na DTO!!!!
+                List<Accident> accidentList = new List<Accident>();
+                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var carAccidentByMember = await _context.CarAccidentByMembers.Where(c => c.MemberMemberId == member.MemberId).ToListAsync();
+
+                foreach(var carAccident in carAccidentByMember)
+                {
+                    accidentList.Add(await _context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefaultAsync());
+                }                
+                return View(accidentList);
+                
 
             }
         }
+        [System.Web.Http.Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexFilterAdmin()
+        {
+            if (HttpContext.User.IsInRole("Admin"))
+            {            
+                List<Accident> accidentList = new List<Accident>();
+                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var carAccidentByMember = await _context.CarAccidentByMembers.Where(c => c.MemberMemberId == member.MemberId).ToListAsync();
 
-        // GET: Accidents/Details/5
+                foreach (var carAccident in carAccidentByMember)
+                {
+                    accidentList.Add(await _context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefaultAsync());
+                }
+                return View("Index",accidentList);
+            }
+            else
+            {
+               return RedirectToAction(nameof(Index));
+            }
+            
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,9 +71,26 @@ namespace AKP_TrackManager.Controllers
             }
 
             var accident = await _context.Accidents.FirstOrDefaultAsync(m => m.AccidentId == id);
+            if (accident == null)
+            {
+                return NotFound();
+            }
             var carAccidentByMember = await _context.CarAccidentByMembers.FirstOrDefaultAsync(m=>m.AccidentAccidentId==id);
+            if(carAccidentByMember == null)
+            {
+                return NotFound();
+            }
             var car = await _context.Cars.FirstOrDefaultAsync(m => m.CarId == carAccidentByMember.CarCarId);
+            if (car == null)
+            {
+                return NotFound();
+            }
             var member = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == carAccidentByMember.MemberMemberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
             var accidentCarMemberDto = new AccidentCarMemberDto()
             {
                 AccidentDate = accident.AccidentDate,
@@ -60,17 +102,11 @@ namespace AKP_TrackManager.Controllers
                 EmailAddress = member.EmailAddress,
                 RegPlate = car.RegPlate
             };
-
-
-            if (accident == null)
-            {
-                return NotFound();
-            }
+            
 
             return View(accidentCarMemberDto);
         }
 
-        // GET: Accidents/Create
         public IActionResult Create()
         {
             ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
@@ -106,7 +142,6 @@ namespace AKP_TrackManager.Controllers
             return View(accident);
         }
 
-        // GET: Accidents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -138,10 +173,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate");
             return View(acmd);
         }
-
-        // POST: Accidents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AccidentId,AccidentDate,Severity,AnyoneInjured,MemberId,CarId")] AccidentCarMemberDto accident)
@@ -187,7 +219,6 @@ namespace AKP_TrackManager.Controllers
             return View(accident);
         }
 
-        // GET: Accidents/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -220,7 +251,6 @@ namespace AKP_TrackManager.Controllers
             return View(accidentCarMemberDto);
         }
 
-        // POST: Accidents/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

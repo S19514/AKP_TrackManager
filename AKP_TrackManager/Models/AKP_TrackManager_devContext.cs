@@ -8,6 +8,7 @@ namespace AKP_TrackManager.Models
 {
     public partial class AKP_TrackManager_devContext : DbContext
     {
+
         public AKP_TrackManager_devContext(DbContextOptions<AKP_TrackManager_devContext> options)
             : base(options)
         {
@@ -62,8 +63,7 @@ namespace AKP_TrackManager.Models
                 entity.Property(e => e.RegPlate)
                     .IsRequired()
                     .HasMaxLength(15)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("('')");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CarAccidentByMember>(entity =>
@@ -102,13 +102,9 @@ namespace AKP_TrackManager.Models
             {
                 entity.ToTable("CarMember");
 
-                entity.Property(e => e.CarMemberId).ValueGeneratedNever();
-
                 entity.Property(e => e.CarCarId).HasColumnName("Car_CarId");
 
-                entity.Property(e => e.MemberMemberId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Member_MemberId");
+                entity.Property(e => e.MemberMemberId).HasColumnName("Member_MemberId");
 
                 entity.HasOne(d => d.CarCar)
                     .WithMany(p => p.CarMembers)
