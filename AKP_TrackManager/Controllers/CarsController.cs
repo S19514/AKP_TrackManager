@@ -64,7 +64,7 @@ namespace AKP_TrackManager.Controllers
             {
                 List<CarMemberDto> carMemberDtos= new List<CarMemberDto>();
                 List<Car> cars = new List<Car>();
-                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
                 var carMembers =await _context.CarMembers.Where(cm=>cm.MemberMemberId == member.MemberId).ToListAsync();
                 foreach(var carMember in carMembers)
                 {

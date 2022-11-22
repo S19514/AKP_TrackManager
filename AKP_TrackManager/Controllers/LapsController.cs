@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using AKP_TrackManager.Models.DTO;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -21,8 +22,62 @@ namespace AKP_TrackManager.Controllers
         // GET: Laps
         public async Task<IActionResult> Index()
         {
-            var aKP_TrackManager_devContext = _context.Laps.Include(l => l.TrainingTraining);
-            return View(await aKP_TrackManager_devContext.ToListAsync());
+            if (HttpContext.User.IsInRole("Admin")) // list all for Admin-privileged user
+            {
+                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
+                var laps = await _context.Laps.Include(l => l.TrainingTraining).ToListAsync();
+                foreach (var lap in laps)
+                {
+                    var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
+                    var member = await _context.Members.Where(m => m.MemberId == memberCarOnLap.MemberMemberId).FirstOrDefaultAsync();
+                    var car = await _context.Cars.Where(c => c.CarId == memberCarOnLap.CarCarId).FirstOrDefaultAsync();
+                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
+                    {
+                        AbsoluteTime = lap.AbsoluteTime,
+                        CarId = car.CarId,
+                        DateOfBirth = member.DateOfBirth,
+                        TrainingTrainingId = lap.TrainingTrainingId,
+                        EmailAddress = member.EmailAddress,
+                        LapId = lap.LapId,
+                        Name = member.Name,
+                        Surname = member.Surname,
+                        RegPlate = car.RegPlate,
+                        MemberId = member.MemberId,
+                        PenaltyTime = lap.PenaltyTime,
+                        MeasuredTime = lap.MeasuredTime,
+
+                    });
+                }
+                return View(memberCarOnLapsDto);
+            }
+            else
+            {
+                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
+                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
+                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m=>m.MemberMemberId == member.MemberId).ToList();
+                foreach(var mcol in membersCarsOnLaps)
+                {
+                    var lap = await _context.Laps.Include(t=>t.TrainingTraining).Where(m=>m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
+                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
+                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
+                    {
+                        AbsoluteTime = lap.AbsoluteTime,
+                        CarId = car.CarId,
+                        DateOfBirth = member.DateOfBirth,
+                        TrainingTrainingId = lap.TrainingTrainingId,
+                        EmailAddress = member.EmailAddress,
+                        LapId = lap.LapId,
+                        Name = member.Name,
+                        Surname = member.Surname,
+                        RegPlate = car.RegPlate,
+                        MemberId = member.MemberId,
+                        PenaltyTime = lap.PenaltyTime,
+                        MeasuredTime = lap.MeasuredTime,
+                        TrainingDate = lap.TrainingTraining.Date
+                    });
+                }
+                return View(memberCarOnLapsDto);
+            }
         }
 
         // GET: Laps/Details/5
