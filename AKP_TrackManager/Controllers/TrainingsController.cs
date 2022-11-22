@@ -21,9 +21,8 @@ namespace AKP_TrackManager.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var aKP_TrackManager_devContext = _context.training.Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);
-            var adc = aKP_TrackManager_devContext.ToList();
-            return View(await aKP_TrackManager_devContext.ToListAsync());
+            var aKP_TrackManager_devContext = _context.training.Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);            
+            return View(await aKP_TrackManager_devContext.OrderByDescending(d=>d.Date).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)

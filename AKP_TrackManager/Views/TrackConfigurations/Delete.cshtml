@@ -11,13 +11,7 @@
 <div>
     <h4>TrackConfiguration</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Reversable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Reversable)
-        </dd>
+    <dl class="row">       
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Length)
         </dt>
@@ -42,11 +36,17 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PresetImageLink)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Reversable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Reversable)
+        </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="TrackId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
     </form>
 </div>

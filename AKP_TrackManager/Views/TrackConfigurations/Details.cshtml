@@ -10,13 +10,7 @@
 <div>
     <h4>TrackConfiguration</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Reversable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Reversable)
-        </dd>
+    <dl class="row">        
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Length)
         </dt>
@@ -24,26 +18,32 @@
             @Html.DisplayFor(model => model.Length)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PresetName)
+            Preset Name
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PresetName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PresetNumber)
+            Preset Number
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PresetNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PresetImageLink)
+            Preset Image
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PresetImageLink)
+           <a href=@Model.PresetImageLink>Image Link</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Reversable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Reversable)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.TrackId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.TrackId">Edit</a> |*@
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>

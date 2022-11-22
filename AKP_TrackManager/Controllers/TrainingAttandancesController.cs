@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using AKP_TrackManager.Models.DTO;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -39,6 +40,26 @@ namespace AKP_TrackManager.Controllers
                                                                 .Where(t => t.MemberMemberId == member.MemberId);
                     return View(await aKP_TrackManager_devContext.ToListAsync());
                 }                        
+        }
+
+        [System.Web.Http.Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexFilterAdmin()
+        {
+            if (HttpContext.User.IsInRole("Admin"))
+            {
+                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var aKP_TrackManager_devContext = _context.TrainingAttandances
+                                                            .Include(t => t.MemberMember)
+                                                            .Include(t => t.TrainingTraining)
+                                                            .Include(t => t.TrainingTraining.LocationLocation)
+                                                            .Where(t => t.MemberMemberId == member.MemberId);
+                return View("Index",await aKP_TrackManager_devContext.ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         public async Task<IActionResult> Details(int? id)

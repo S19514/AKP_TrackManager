@@ -6,13 +6,21 @@
 }
 @if (User.IsInRole("Admin"))
 {
-    <h1>All Training Attendances</h1>
+    <h1>Training Attendances</h1>
 }
 @if(User.IsInRole("User"))
 {
     <h1>Your Training Attendances</h1>
 }
-
+<thead>
+<p>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
+        <a asp-action="Index" class="btn btn-success">Show All</a>
+    }
+</p>
+</thead>
 
 <table class="table">
     <thead>
