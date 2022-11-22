@@ -5,16 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Roles</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Add New Role</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RoleName)
+                Role Name
             </th>
             <th></th>
         </tr>
@@ -25,10 +25,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.RoleName)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RoleId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RoleId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RoleId">Delete</a>
+            <td>                
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.RoleId">Edit</a>
+                    <a asp-action="Delete" class="btn btn-danger"  asp-route-id="@item.RoleId">Delete</a>
             </td>
         </tr>
 }

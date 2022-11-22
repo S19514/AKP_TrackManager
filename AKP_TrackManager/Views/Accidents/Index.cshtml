@@ -16,7 +16,7 @@
         <a asp-action="Create" class="btn btn-primary">Add New Accident</a>
         @if(User.IsInRole("Admin"))
         {
-            <a asp-action="IndexFilterAdmin" class="btn btn-secondary">Show Only Yours</a>
+            <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
                 <a asp-action="Index" class="btn btn-success">Show All</a>
         }
     </p>
@@ -46,7 +46,7 @@
                 <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.AccidentId">Details</a> 
                 @if(User.IsInRole("Admin"))
                 {
-                    <a asp-action="Edit" class="btn btn-secondary" asp-route-id="@item.AccidentId">Edit</a> 
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.AccidentId">Edit</a> 
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.AccidentId">Delete</a>
                 }
             </td>

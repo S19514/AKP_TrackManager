@@ -1,4 +1,4 @@
-﻿@model AKP_TrackManager.Models.Car
+﻿@model AKP_TrackManager.Models.DTO.CarMemberDto
 
 @{
     ViewData["Title"] = "Edit";
@@ -38,6 +38,10 @@
                 <label asp-for="RegPlate" class="control-label">Registration Plate</label>
                 <input asp-for="RegPlate" class="form-control" />
                 <span asp-validation-for="RegPlate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label">Owner</label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.MemberMemberId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
