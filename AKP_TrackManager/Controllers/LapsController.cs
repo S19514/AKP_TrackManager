@@ -109,16 +109,38 @@ namespace AKP_TrackManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId,MemberId,CarId")] Lap lap)
+        public async Task<IActionResult> Create([Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId,MemberId,CarId")] MemberCarOnLapDto pMemberLapOnCar)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(lap);
+                var lap = new Lap()
+                {
+                    AbsoluteTime = pMemberLapOnCar.AbsoluteTime,
+                    MeasuredTime = pMemberLapOnCar.MeasuredTime,
+                    PenaltyTime = pMemberLapOnCar.PenaltyTime,
+                    TrainingTrainingId = pMemberLapOnCar.TrainingTrainingId
+                };
+                _context.Laps.Add(lap);
                 await _context.SaveChangesAsync();
+
+                MemberCarOnLap memberCarOnLap = new MemberCarOnLap()
+                {
+                    CarCarId = pMemberLapOnCar.CarId,
+                    LapLapId = lap.LapId,
+                    MemberMemberId = pMemberLapOnCar.MemberId,
+                };
+                _context.MemberCarOnLaps.Add(memberCarOnLap);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
-            return View(lap);
+            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", pMemberLapOnCar.TrainingTrainingId);
+            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
+            ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date",pMemberLapOnCar.TrainingTrainingId);
+            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress",pMemberLapOnCar.MemberId);
+            ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate",pMemberLapOnCar.CarId);
+
+            return View(pMemberLapOnCar);
         }
 
         public async Task<IActionResult> Edit(int? id)
