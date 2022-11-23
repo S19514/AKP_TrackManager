@@ -19,7 +19,6 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: Laps
         public async Task<IActionResult> Index()
         {
             if (HttpContext.User.IsInRole("Admin")) // list all for Admin-privileged user
@@ -80,7 +79,6 @@ namespace AKP_TrackManager.Controllers
             }
         }
 
-        // GET: Laps/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -99,19 +97,19 @@ namespace AKP_TrackManager.Controllers
             return View(lap);
         }
 
-        // GET: Laps/Create
         public IActionResult Create()
         {
-            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId");
+            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date=t.Date.ToString("dd.MM.yyyy") }).ToList();
+            ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
+            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate");
+
             return View();
         }
 
-        // POST: Laps/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId")] Lap lap)
+        public async Task<IActionResult> Create([Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId,MemberId,CarId")] Lap lap)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +121,6 @@ namespace AKP_TrackManager.Controllers
             return View(lap);
         }
 
-        // GET: Laps/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,9 +137,6 @@ namespace AKP_TrackManager.Controllers
             return View(lap);
         }
 
-        // POST: Laps/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId")] Lap lap)
@@ -176,7 +170,6 @@ namespace AKP_TrackManager.Controllers
             return View(lap);
         }
 
-        // GET: Laps/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -195,7 +188,6 @@ namespace AKP_TrackManager.Controllers
             return View(lap);
         }
 
-        // POST: Laps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

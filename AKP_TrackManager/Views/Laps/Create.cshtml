@@ -1,4 +1,4 @@
-﻿@model AKP_TrackManager.Models.Lap
+﻿@model AKP_TrackManager.Models.DTO.MemberCarOnLapDto
 
 @{
     ViewData["Title"] = "Create";
@@ -30,7 +30,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="TrainingTrainingId" class="control-label"></label>
-                <select asp-for="TrainingTrainingId" class ="form-control" asp-items="ViewBag.TrainingTrainingId"></select>
+                <select asp-for="TrainingTrainingId" class ="form-control" asp-items="ViewBag.Date"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.EmailAddress"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarId" class="control-label"></label>
+                <select asp-for="CarId" class="form-control" asp-items="ViewBag.RegPlate"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
