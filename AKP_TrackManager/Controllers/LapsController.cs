@@ -46,6 +46,7 @@ namespace AKP_TrackManager.Controllers
                         MeasuredTime = lap.MeasuredTime,
 
                     });
+                    //todo ogarnąć dlaczego data treningu jest taka zwalona
                 }
                 return View(memberCarOnLapsDto);
             }
