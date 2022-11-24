@@ -1,15 +1,34 @@
 ﻿@model IEnumerable<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>
 
+<script>
+$(document).ready(function () {
+    $("#clientScreenWidth").val($(window).width());
+    $("#clientScreenHeight").val($(window).height());
+});
+</script>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Laps</h1>
-
+@if (User.IsInRole("Admin"))
+{
+    <h1>Laps</h1>
+}
+@if (User.IsInRole("User"))
+{
+    <h1>Your Laps</h1>
+}
+<thead>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Add New Lap</a>
+        @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
+        <a asp-action="Index" class="btn btn-success">Show All</a>
+    }
 </p>
+</thead>
 <table class="table">
     <thead>
         <tr>
@@ -38,29 +57,30 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MeasuredTime)
+                @item.MeasuredTime.ToString("mm':'ss':'ff")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PenaltyTime)
+                @item.PenaltyTime.ToString("mm':'ss':'ff")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AbsoluteTime)
+                @item.AbsoluteTime.ToString("mm':'ss':'ff")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrainingDate)
+                @item.TrainingDate.ToString("dd.MM.yyyy")
             </td>
             <td>
                 @String.Join(" ",item.Name,item.Surname) 
+            </td>               
+            <td>
+                    @item.RegPlate 
+                    @*@ViewContext.RouteData.Values["clientScreenWidth"]*@
             </td>
             <td>
-                @item.RegPlate
-            </td>
-            <td>
-                <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.LapId">Details</a> |
-                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.LapId">Edit</a> |
+                <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.LapId">Details</a> 
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.LapId">Edit</a> 
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.LapId">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using AKP_TrackManager.UI_Extensions;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +10,10 @@
 </head>
 <body>
     <header>
+       @* <div class="alert alert-danger" role="alert">
+            Nie opłaciłeś składki członkowskiej!
+        </div>*@ 
+        @*todo later*@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                  @if(!User.Identity.IsAuthenticated)
@@ -42,7 +47,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
                             </li>
-                             <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Accidents" asp-action="Index">Accidents</a>
                             </li>
                             @if (User.IsInRole("Admin"))
@@ -59,7 +64,7 @@
                             </li>
                               <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
-                            </li>
+                            </li>                            
                         }
                         @if(!User.Identity.IsAuthenticated)
                         {

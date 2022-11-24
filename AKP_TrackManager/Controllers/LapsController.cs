@@ -36,6 +36,7 @@ namespace AKP_TrackManager.Controllers
                         CarId = car.CarId,
                         DateOfBirth = member.DateOfBirth,
                         TrainingTrainingId = lap.TrainingTrainingId,
+                        TrainingDate = lap.TrainingTraining.Date,
                         EmailAddress = member.EmailAddress,
                         LapId = lap.LapId,
                         Name = member.Name,
@@ -78,6 +79,44 @@ namespace AKP_TrackManager.Controllers
                 }
                 return View(memberCarOnLapsDto);
             }
+        }
+
+        [System.Web.Http.Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexFilterAdmin()
+        {
+            if (HttpContext.User.IsInRole("Admin"))
+            {
+                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
+                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
+                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m => m.MemberMemberId == member.MemberId).ToList();
+                foreach (var mcol in membersCarsOnLaps)
+                {
+                    var lap = await _context.Laps.Include(t => t.TrainingTraining).Where(m => m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
+                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
+                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
+                    {
+                        AbsoluteTime = lap.AbsoluteTime,
+                        CarId = car.CarId,
+                        DateOfBirth = member.DateOfBirth,
+                        TrainingTrainingId = lap.TrainingTrainingId,
+                        EmailAddress = member.EmailAddress,
+                        LapId = lap.LapId,
+                        Name = member.Name,
+                        Surname = member.Surname,
+                        RegPlate = car.RegPlate,
+                        MemberId = member.MemberId,
+                        PenaltyTime = lap.PenaltyTime,
+                        MeasuredTime = lap.MeasuredTime,
+                        TrainingDate = lap.TrainingTraining.Date
+                    });
+                }
+                return View("Index", memberCarOnLapsDto);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -135,7 +174,7 @@ namespace AKP_TrackManager.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", pMemberLapOnCar.TrainingTrainingId);
+            //ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", pMemberLapOnCar.TrainingTrainingId);
             var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date",pMemberLapOnCar.TrainingTrainingId);
             ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress",pMemberLapOnCar.MemberId);
@@ -156,7 +195,43 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
-            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
+            var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
+            if(memberCarOnLap== null)
+            {
+                return NotFound();
+            }
+            var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+            var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            var memberOnCarLapDto = new MemberCarOnLapDto
+            {
+                AbsoluteTime = lap.AbsoluteTime,
+                CarId = car.CarId,
+                DateOfBirth = member.DateOfBirth,
+                TrainingTrainingId = lap.TrainingTrainingId,
+                TrainingDate = lap.TrainingTraining.Date,
+                EmailAddress = member.EmailAddress,
+                LapId = lap.LapId,
+                Name = member.Name,
+                Surname = member.Surname,
+                RegPlate = car.RegPlate,
+                MemberId = member.MemberId,
+                PenaltyTime = lap.PenaltyTime,
+                MeasuredTime = lap.MeasuredTime,
+            };
+
+            //ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
+            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
+            ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date", lap.TrainingTrainingId);
+            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress", member.MemberId);
+            ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate", car.CarId);
             return View(lap);
         }
 
