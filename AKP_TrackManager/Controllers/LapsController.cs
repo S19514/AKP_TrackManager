@@ -119,6 +119,37 @@ namespace AKP_TrackManager.Controllers
 
         }
 
+        public async Task<IActionResult> IndexByTrainingId(int? id)
+        {
+           
+                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
+                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
+                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m => m.MemberMemberId == member.MemberId && m.LapLap.TrainingTrainingId == id).ToList();
+                foreach (var mcol in membersCarsOnLaps)
+                {
+                    var lap = await _context.Laps.Include(t => t.TrainingTraining).Where(m => m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
+                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
+                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
+                    {
+                        AbsoluteTime = lap.AbsoluteTime,
+                        CarId = car.CarId,
+                        DateOfBirth = member.DateOfBirth,
+                        TrainingTrainingId = lap.TrainingTrainingId,
+                        EmailAddress = member.EmailAddress,
+                        LapId = lap.LapId,
+                        Name = member.Name,
+                        Surname = member.Surname,
+                        RegPlate = car.RegPlate,
+                        MemberId = member.MemberId,
+                        PenaltyTime = lap.PenaltyTime,
+                        MeasuredTime = lap.MeasuredTime,
+                        TrainingDate = lap.TrainingTraining.Date
+                    });
+                }
+                return View("Index", memberCarOnLapsDto);
+
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -133,8 +164,42 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
+            var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
+            if (memberCarOnLap == null)
+            {
+                return NotFound();
+            }
+            var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
+            if(car == null)
+            {
+                return NotFound();
+            }
+            var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
+            if(member == null)
+            {
+                return NotFound();
+            }
 
-            return View(lap);
+            var memberCarOnLapDto = new MemberCarOnLapDto
+            {
+                AbsoluteTime = lap.AbsoluteTime,
+                CarId = car.CarId,
+                DateOfBirth = member.DateOfBirth,
+                TrainingTrainingId = lap.TrainingTrainingId,
+                EmailAddress = member.EmailAddress,
+                LapId = lap.LapId,
+                Name = member.Name,
+                Surname = member.Surname,
+                RegPlate = car.RegPlate,
+                MemberId = member.MemberId,
+                PenaltyTime = lap.PenaltyTime,
+                MeasuredTime = lap.MeasuredTime,
+                TrainingDate = lap.TrainingTraining.Date,
+                Model = car.Model,
+                Make = car.Make,
+                TrainingLocationString = await _context.Locations.Where(l => l.LocationId == lap.TrainingTraining.LocationLocationId).Select(l => l.FriendlyName).FirstOrDefaultAsync()
+            };
+            return View(memberCarOnLapDto);
         }
 
         public IActionResult Create()
@@ -183,90 +248,115 @@ namespace AKP_TrackManager.Controllers
             return View(pMemberLapOnCar);
         }
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var lap = await _context.Laps.FindAsync(id);
-            if (lap == null)
-            {
-                return NotFound();
-            }
-            var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
-            if(memberCarOnLap== null)
-            {
-                return NotFound();
-            }
-            var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            var memberOnCarLapDto = new MemberCarOnLapDto
-            {
-                AbsoluteTime = lap.AbsoluteTime,
-                CarId = car.CarId,
-                DateOfBirth = member.DateOfBirth,
-                TrainingTrainingId = lap.TrainingTrainingId,
-                TrainingDate = lap.TrainingTraining.Date,
-                EmailAddress = member.EmailAddress,
-                LapId = lap.LapId,
-                Name = member.Name,
-                Surname = member.Surname,
-                RegPlate = car.RegPlate,
-                MemberId = member.MemberId,
-                PenaltyTime = lap.PenaltyTime,
-                MeasuredTime = lap.MeasuredTime,
-            };
+        //    var lap = await _context.Laps.Include(t=>t.TrainingTraining).Where(l=>l.LapId == id).FirstOrDefaultAsync();
+        //    if (lap == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
+        //    if(memberCarOnLap== null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
+        //    if (member == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
+        //    if (car == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var memberOnCarLapDto = new MemberCarOnLapDto
+        //    {
+        //        AbsoluteTime = lap.AbsoluteTime,
+        //        CarId = car.CarId,
+        //        DateOfBirth = member.DateOfBirth,
+        //        TrainingTrainingId = lap.TrainingTrainingId,
+        //        TrainingDate = lap.TrainingTraining.Date,
+        //        EmailAddress = member.EmailAddress,
+        //        LapId = lap.LapId,
+        //        Name = member.Name,
+        //        Surname = member.Surname,
+        //        RegPlate = car.RegPlate,
+        //        MemberId = member.MemberId,
+        //        PenaltyTime = lap.PenaltyTime,
+        //        MeasuredTime = lap.MeasuredTime,
+        //    };
 
-            //ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
-            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
-            ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date", lap.TrainingTrainingId);
-            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress", member.MemberId);
-            ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate", car.CarId);
-            return View(lap);
-        }
+        //    //ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
+        //    var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
+        //    ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date", lap.TrainingTrainingId);
+        //    ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress", member.MemberId);
+        //    ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate", car.CarId);
+        //    return View(memberOnCarLapDto);
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId")] Lap lap)
-        {
-            if (id != lap.LapId)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId")] MemberCarOnLapDto pMemberCarOnLapDto)
+        //{
+        //    if (id != pMemberCarOnLapDto.LapId)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var Training = await _context.training.FindAsync(pMemberCarOnLapDto.TrainingTrainingId);
+        //    if (Training == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(lap);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LapExists(lap.LapId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", lap.TrainingTrainingId);
-            return View(lap);
-        }
+        //    var lap = await _context.Laps.FindAsync(id);
+        //    var member = await _context.Members.FindAsync(pMemberCarOnLapDto.MemberId);
+        //    if(member == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var car = await _context.Cars.FindAsync(pMemberCarOnLapDto.CarId);
+        //    if(car == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            lap.MeasuredTime = pMemberCarOnLapDto.MeasuredTime;
+        //            lap.AbsoluteTime = pMemberCarOnLapDto.AbsoluteTime;
+        //            lap.PenaltyTime = pMemberCarOnLapDto.PenaltyTime;
+        //            lap.TrainingTrainingId = pMemberCarOnLapDto.TrainingTrainingId;
+                    
+        //            _context.Laps.Update(lap);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!LapExists(pMemberCarOnLapDto.LapId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
+        //    ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date", lap.TrainingTrainingId);
+        //    ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress", member.MemberId);
+        //    ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate", car.CarId);            
+        //    return View(pMemberCarOnLapDto);
+        //}
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -282,8 +372,42 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
+            var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
+            if (memberCarOnLap == null)
+            {
+                return NotFound();
+            }
+            var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
 
-            return View(lap);
+            var memberCarOnLapDto = new MemberCarOnLapDto
+            {
+                AbsoluteTime = lap.AbsoluteTime,
+                CarId = car.CarId,
+                DateOfBirth = member.DateOfBirth,
+                TrainingTrainingId = lap.TrainingTrainingId,
+                EmailAddress = member.EmailAddress,
+                LapId = lap.LapId,
+                Name = member.Name,
+                Surname = member.Surname,
+                RegPlate = car.RegPlate,
+                MemberId = member.MemberId,
+                PenaltyTime = lap.PenaltyTime,
+                MeasuredTime = lap.MeasuredTime,
+                TrainingDate = lap.TrainingTraining.Date,
+                Model = car.Model,
+                Make = car.Make,
+                TrainingLocationString = await _context.Locations.Where(l => l.LocationId == lap.TrainingTraining.LocationLocationId).Select(l => l.FriendlyName).FirstOrDefaultAsync()
+            };
+            return View(memberCarOnLapDto);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -291,6 +415,8 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lap = await _context.Laps.FindAsync(id);
+            var memberCarOnLaps = await _context.MemberCarOnLaps.Where(m => m.LapLapId == id).FirstOrDefaultAsync();
+            _context.MemberCarOnLaps.Remove(memberCarOnLaps);
             _context.Laps.Remove(lap);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

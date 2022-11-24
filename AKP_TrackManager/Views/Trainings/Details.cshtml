@@ -10,14 +10,28 @@
    
         
     <p>
-    <form>  <a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@Model.TrainingId">Sign For Training</a></form>
-            @*@Html.ActionLink("Sign For Training","SignUpForTraining","trainings",Model.TrainingId)*@
-        </p>
+         @if(Model.Date > DateTime.UtcNow.Date)
+        {
+        <form style="display:inline-block"><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@Model.TrainingId">Sign For Training</a></form>
+        
+        }
+        @if(Model.Date < DateTime.UtcNow.Date)
+        {
+        <form style="display:inline-block"><a asp-action="IndexByTrainingId" asp-controller="Laps" class="btn btn-success" asp-route-id="@Model.TrainingId">Display Lap Times</a></form>
+        }
+    </p>
             
    
 
 <div>
-    <h4>Training</h4>
+    @if (Model.Date > DateTime.UtcNow.Date)
+    {
+        <h4>Training</h4>
+    }
+    @if (Model.Date < DateTime.UtcNow.Date)
+    {
+        <h4>Training Has Taken Place</h4> 
+    }
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -56,3 +70,41 @@
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
     
 </div>
+@*<partial name="../TrainingAttandances/PartialIndex" model="Model.TrainingAttandances.ToList()"  />*@
+<p></p>
+<p>
+    <h3>Sign Up List</h3>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Member
+            </th>
+            <th>
+                Training
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TrainingAttandances.Where(t=>t.TrainingTrainingId == Model.TrainingId).ToList())
+        {
+            <tr>
+                <td>
+                    @item.MemberMember.Name @item.MemberMember.Surname
+                </td>
+                <td>
+                    @item.TrainingTraining.Date.ToString("dd.MM.yyyy") - @Html.DisplayFor(modelItem => item.TrainingTraining.LocationLocation.FriendlyName)
+                </td>              
+                    <td>
+                    @if (item.MemberMember.EmailAddress == User.Identity.Name || User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" class="btn btn-primary" asp-controller="TrainingAttandances" asp-route-id="@item.TrainingAttandanceId">Delete</a>
+                    }
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

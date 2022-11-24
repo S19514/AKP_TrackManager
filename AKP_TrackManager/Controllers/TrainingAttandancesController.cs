@@ -180,9 +180,10 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var trainingAttandance = await _context.TrainingAttandances.FindAsync(id);
+            var trainingId = trainingAttandance.TrainingTrainingId;
             _context.TrainingAttandances.Remove(trainingAttandance);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Trainings", new { id = trainingId });
         }
 
         private bool TrainingAttandanceExists(int id)

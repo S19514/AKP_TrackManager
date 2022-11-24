@@ -28,6 +28,7 @@ namespace AKP_TrackManager.Models.DTO
         public int TrainingTrainingId { get; set; }
 
         public DateTime TrainingDate { get; set; }
+        public string TrainingLocationString { get; set; }
 
     }
 }

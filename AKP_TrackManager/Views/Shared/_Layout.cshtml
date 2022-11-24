@@ -34,13 +34,7 @@
                         {                       
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
-                            </li>                           
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Locations" asp-action="Index">Locations</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TrainingAttandances" asp-action="Index">Training Attandances</a>
-                            </li>
+                            </li>                                                                                 
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="trainings" asp-action="Index">Trainings</a>
                             </li>
@@ -55,15 +49,21 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                                 </li>
-                            }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TrackConfigurations" asp-action="Index">Track Configurations</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="TrainingAttandances" asp-action="Index">Attendances</a>
+                                </li>
+                                <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TrackConfigurations" asp-action="Index">Configurations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Locations" asp-action="Index">Locations</a>
+                                </li>
+                            }                           
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Laps" asp-action="Index">Laps</a>
                             </li>
                               <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                            <a class="nav-link text-dark" style="float:right" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
                             </li>                            
                         }
                         @if(!User.Identity.IsAuthenticated)

@@ -35,7 +35,13 @@ namespace AKP_TrackManager.Controllers
             var training = await _context.training
                 .Include(t => t.LocationLocation)
                 .Include(t => t.TrackConfigurationTrack)
-                .FirstOrDefaultAsync(m => m.TrainingId == id);
+                .Include(t=>t.TrainingAttandances)
+                .FirstOrDefaultAsync(m => m.TrainingId == id);            
+
+            foreach(var ta in training.TrainingAttandances)
+            {
+                ta.MemberMember = await _context.Members.FirstAsync(m => m.MemberId == ta.MemberMemberId);
+            }
             if (training == null)
             {
                 return NotFound();
@@ -70,11 +76,11 @@ namespace AKP_TrackManager.Controllers
                 await _context.SaveChangesAsync();
                 var x = trainingAttandance.TrainingAttandanceId;
                 
-                return RedirectToAction("Index", "TrainingAttandances");
+                return RedirectToAction("Details", "Trainings", new {id = id});
             }
             else
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Trainings", new { id = id });
             }
         }
 

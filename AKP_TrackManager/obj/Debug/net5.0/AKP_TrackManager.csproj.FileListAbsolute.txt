@@ -453,3 +453,4 @@ C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\MemberCarOnLaps\Details.cshtml.g.cs
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\MemberCarOnLaps\Edit.cshtml.g.cs
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\MemberCarOnLaps\Index.cshtml.g.cs
+C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\TrainingAttandances\PartialIndex.cshtml.g.cs
