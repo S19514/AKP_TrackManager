@@ -1,4 +1,4 @@
-﻿@model AKP_TrackManager.Models.Lap
+﻿@model AKP_TrackManager.Models.DTO.MemberCarOnLapDto
 
 @{
     ViewData["Title"] = "Create";
@@ -15,22 +15,30 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="MeasuredTime" class="control-label"></label>
-                <input asp-for="MeasuredTime" class="form-control" />
+                <input asp-for="MeasuredTime" type="time" value="00:00:00" step="0.001" class="form-control" />
                 <span asp-validation-for="MeasuredTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PenaltyTime" class="control-label"></label>
-                <input asp-for="PenaltyTime" class="form-control" />
+                <input asp-for="PenaltyTime" step="0.001" type="time" value="00:00:00" class="form-control" />
                 <span asp-validation-for="PenaltyTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AbsoluteTime" class="control-label"></label>
-                <input asp-for="AbsoluteTime" class="form-control" />
+                <input asp-for="AbsoluteTime" step="0.001" defa type="time" value="00:00:00" class="form-control" />
                 <span asp-validation-for="AbsoluteTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TrainingTrainingId" class="control-label"></label>
-                <select asp-for="TrainingTrainingId" class ="form-control" asp-items="ViewBag.TrainingTrainingId"></select>
+                <label asp-for="TrainingTrainingId" class="control-label">Training Date</label>
+                <select asp-for="TrainingTrainingId" class="form-control" asp-items="ViewBag.Date"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label">Member EmailAddress</label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.EmailAddress"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarId" class="control-label">Car Registration Plate</label>
+                <select asp-for="CarId" class="form-control" asp-items="ViewBag.RegPlate"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -40,6 +48,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
 </div>
-

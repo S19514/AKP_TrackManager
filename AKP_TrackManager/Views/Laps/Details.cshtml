@@ -1,43 +1,58 @@
-﻿@model AKP_TrackManager.Models.Lap
+﻿@model AKP_TrackManager.Models.DTO.MemberCarOnLapDto
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
 <div>
     <h4>Lap</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MeasuredTime)
+            Measured Time
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MeasuredTime)
+            @Model.MeasuredTime.ToString("mm':'ss':'ff")
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PenaltyTime)
+            Penalty Time
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PenaltyTime)
+            @Model.PenaltyTime.ToString("mm':'ss':'ff")
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AbsoluteTime)
+            Absolute Time
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AbsoluteTime)
+            @Model.AbsoluteTime.ToString("mm':'ss':'ff")
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TrainingTraining)
+            Training Date
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrainingTraining.TrainingId)
+            @Model.TrainingDate.ToString("dd.MM.yyyy")
+        </dd>
+        <dt class="col-sm-2">
+            Training Location
+        </dt>
+        <dd class="col-sm-10">
+            @Model.TrainingLocationString
+        </dd>
+        <dt class="col-sm-2">
+            Member 
+        </dt>
+        <dd class="col-sm-10">
+            @String.Join(" ",Model.Name,Model.Surname)
+        </dd>
+              <dt class = "col-sm-2">
+            Car
+        </dt>
+        <dd class = "col-sm-10">
+            @String.Join(" ",Model.Make,Model.Model,Model.RegPlate)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.LapId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div>    
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>

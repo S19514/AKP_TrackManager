@@ -18,13 +18,14 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: TrackConfigurations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return View(await _context.TrackConfigurations.ToListAsync());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<TrackConfiguration> PagedList = new X.PagedList.PagedList<TrackConfiguration>(await _context.TrackConfigurations.ToListAsync(), pageNumber, pageSize);
+            return View(PagedList);
         }
 
-        // GET: TrackConfigurations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,15 +43,11 @@ namespace AKP_TrackManager.Controllers
             return View(trackConfiguration);
         }
 
-        // GET: TrackConfigurations/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TrackConfigurations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TrackId,Reversable,Length,PresetName,PresetNumber,PresetImageLink")] TrackConfiguration trackConfiguration)

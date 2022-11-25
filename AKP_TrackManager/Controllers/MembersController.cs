@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Server.IISIntegration;
 using AKP_TrackManager.Security;
 using System.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -25,18 +26,18 @@ namespace AKP_TrackManager.Controllers
         public MembersController(AKP_TrackManager_devContext context, IMemberRepository memberRepository)
         {
             _context = context;
-            _memberRepository = memberRepository;
-            
+            _memberRepository = memberRepository;            
         }
 
-        // GET: Members
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             var members = _context.Members.Include(m => m.RoleRole);
-            return View(await members.ToListAsync());
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<Member> PagedList = new X.PagedList.PagedList<Member>(members, pageNumber, pageSize);
+            return View(PagedList);            
         }
 
-        // GET: Members/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,16 +56,12 @@ namespace AKP_TrackManager.Controllers
             return View(member);
         }
 
-        // GET: Members/Create
         public IActionResult Create()
         {
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
 
-        // POST: Members/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberId,Name,Surname,DateOfBirth,PhoneNumber,EmailAddress,IsAscendant,Password,IsStudent,RoleRoleId,IsBlocked")] Member member)
@@ -79,7 +76,6 @@ namespace AKP_TrackManager.Controllers
             return View(member);
         }
 
-        // GET: Members/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -96,9 +92,6 @@ namespace AKP_TrackManager.Controllers
             return View(member);
         }
 
-        // POST: Members/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberId,Name,Surname,DateOfBirth,PhoneNumber,EmailAddress,IsAscendant,Password,IsStudent,RoleRoleId,IsBlocked")] Member member)
@@ -131,7 +124,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-        // GET: Members/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,7 +143,6 @@ namespace AKP_TrackManager.Controllers
             return View(member);
         }
 
-        // POST: Members1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,5 +1,7 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.training>
-
+﻿@model X.PagedList.IPagedList<AKP_TrackManager.Models.training>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,29 +10,21 @@
 <h1>Trainings</h1>
  @if(User.IsInRole("Admin"))
 {
-    
     <p>
         <a asp-action="Create" class="btn btn-primary">Add New Training</a>
     </p>
-    
 }
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-         @*   <th>
-                Start Time
+            Date
             </th>
             <th>
-                End Time
-            </th>*@
-            <th>
-             Location Name
+            Location Name
             </th>
             <th>
-                Preset Name
+            Preset Name
             </th>
             <th></th>
         </tr>
@@ -41,12 +35,6 @@
             <td>
                 @item.Date.ToString("dd.MM.yyyy")
             </td>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.LocationLocation.FriendlyName)
             </td>
@@ -54,11 +42,7 @@
                 @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.PresetName)
             </td>
             <td>
-
-                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingId">Details</a>
-                   
-                        @*<form><a asp-action="SingUpForTraining" asp-controller="trainings" class="btn btn-primary" asp-route-id="@item.TrainingId">Sign</a></form>*@
-                    
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingId">Details</a>                                                           
                     @if(User.IsInRole("Admin"))
                     {
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.TrainingId">Edit</a> 
@@ -69,3 +53,14 @@
 }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5
+})

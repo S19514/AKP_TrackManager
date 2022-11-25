@@ -19,7 +19,7 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             if (HttpContext.User.IsInRole("Admin")) // list all for Admin-privileged user
             {
@@ -57,14 +57,16 @@ namespace AKP_TrackManager.Controllers
                         });
                     
                 }
-
-                return View(carMemberDtos);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<CarMemberDto> PagedList = new X.PagedList.PagedList<CarMemberDto>(carMemberDtos, pageNumber, pageSize);
+                return View(PagedList);                
             }
             else // list only belonging cars to User-privileged user
             {
                 List<CarMemberDto> carMemberDtos= new List<CarMemberDto>();
                 List<Car> cars = new List<Car>();
-                var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
+                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
                 var carMembers =await _context.CarMembers.Where(cm=>cm.MemberMemberId == member.MemberId).ToListAsync();
                 foreach(var carMember in carMembers)
                 {
@@ -93,12 +95,15 @@ namespace AKP_TrackManager.Controllers
 
                     });
                 }
-                return View(carMemberDtos);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<CarMemberDto> PagedList = new X.PagedList.PagedList<CarMemberDto>(carMemberDtos, pageNumber, pageSize);
+                return View(PagedList);
             }
         }
 
         [System.Web.Http.Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexFilterAdmin()
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
             {
@@ -133,7 +138,10 @@ namespace AKP_TrackManager.Controllers
 
                     }); ;
                 }
-                return View("Index", carMemberDtos);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<CarMemberDto> PagedList = new X.PagedList.PagedList<CarMemberDto>(carMemberDtos, pageNumber, pageSize);
+                return View("IndexAdmin", PagedList);                
             }
             else
             {

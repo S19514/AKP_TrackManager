@@ -1,0 +1,67 @@
+﻿@model X.PagedList.IPagedList<AKP_TrackManager.Models.TrainingAttandance>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (User.IsInRole("Admin"))
+{
+    <h1>Training Attendances</h1>
+}
+@if (User.IsInRole("User"))
+{
+    <h1>Your Training Attendances</h1>
+}
+<thead>
+    <p>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
+            <a asp-action="Index" class="btn btn-success">Show All</a>
+        }
+    </p>
+</thead>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Member
+            </th>
+            <th>
+                Training
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.MemberMember.Name @item.MemberMember.Surname
+                </td>
+                <td>
+                    @item.TrainingTraining.Date.ToString("dd.MM.yyyy") - @Html.DisplayFor(modelItem => item.TrainingTraining.LocationLocation.FriendlyName)
+                </td>
+                <td>
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.TrainingAttandanceId">Details</a>
+                    <a asp-action="Delete" class="btn btn-primary" asp-route-id="@item.TrainingAttandanceId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("IndexFilterAdmin", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5
+})

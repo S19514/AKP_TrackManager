@@ -19,10 +19,13 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var aKP_TrackManager_devContext = _context.training.Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);            
-            return View(await aKP_TrackManager_devContext.OrderByDescending(d=>d.Date).ToListAsync());
+            var aKP_TrackManager_devContext = _context.training.OrderByDescending(t=>t.Date).Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<training> PagedList = new X.PagedList.PagedList<training>(aKP_TrackManager_devContext, pageNumber, pageSize);
+            return View(PagedList);            
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -35,7 +38,13 @@ namespace AKP_TrackManager.Controllers
             var training = await _context.training
                 .Include(t => t.LocationLocation)
                 .Include(t => t.TrackConfigurationTrack)
-                .FirstOrDefaultAsync(m => m.TrainingId == id);
+                .Include(t=>t.TrainingAttandances)
+                .FirstOrDefaultAsync(m => m.TrainingId == id);            
+
+            foreach(var ta in training.TrainingAttandances)
+            {
+                ta.MemberMember = await _context.Members.FirstAsync(m => m.MemberId == ta.MemberMemberId);
+            }
             if (training == null)
             {
                 return NotFound();
@@ -70,11 +79,11 @@ namespace AKP_TrackManager.Controllers
                 await _context.SaveChangesAsync();
                 var x = trainingAttandance.TrainingAttandanceId;
                 
-                return RedirectToAction("Index", "TrainingAttandances");
+                return RedirectToAction("Details", "Trainings", new {id = id});
             }
             else
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Trainings", new { id = id });
             }
         }
 

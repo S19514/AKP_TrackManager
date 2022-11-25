@@ -1,10 +1,10 @@
-﻿@model AKP_TrackManager.Models.Lap
+﻿@model AKP_TrackManager.Models.DTO.MemberCarOnLapDto
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@*NOT USED*@
 <h1>Edit</h1>
 
 <h4>Lap</h4>
@@ -15,24 +15,31 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="LapId" />
             <div class="form-group">
-                <label asp-for="MeasuredTime" class="control-label"></label>
-                <input asp-for="MeasuredTime" class="form-control" />
+                <label asp-for="MeasuredTime" class="control-label">Measured Time</label>
+                <input asp-for="MeasuredTime" step="0.001" type="time" value="00:00:00" class="form-control" />
                 <span asp-validation-for="MeasuredTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PenaltyTime" class="control-label"></label>
-                <input asp-for="PenaltyTime" class="form-control" />
+                <label asp-for="PenaltyTime" class="control-label">Penalty Time</label>
+                <input asp-for="PenaltyTime" step="0.001" type="time" value="00:00:00" class="form-control" />
                 <span asp-validation-for="PenaltyTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AbsoluteTime" class="control-label"></label>
-                <input asp-for="AbsoluteTime" class="form-control" />
+                <label asp-for="AbsoluteTime" class="control-label">Absolute Time</label>
+                <input asp-for="AbsoluteTime" step="0.001" type="time" value="00:00:00" class="form-control" />
                 <span asp-validation-for="AbsoluteTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TrainingTrainingId" class="control-label"></label>
-                <select asp-for="TrainingTrainingId" class="form-control" asp-items="ViewBag.TrainingTrainingId"></select>
-                <span asp-validation-for="TrainingTrainingId" class="text-danger"></span>
+                <label asp-for="TrainingTrainingId" class="control-label">Training Date</label>
+                <select asp-for="TrainingTrainingId" class="form-control" asp-items="ViewBag.Date"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label">Member EmailAddress</label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.EmailAddress"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarId" class="control-label">Car Registration Plate</label>
+                <select asp-for="CarId" class="form-control" asp-items="ViewBag.RegPlate"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

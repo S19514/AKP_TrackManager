@@ -1,5 +1,7 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.Member>
-
+﻿@model X.PagedList.IPagedList<AKP_TrackManager.Models.Member>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Index";
 }
@@ -14,17 +16,11 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                Surname
             </th>
-      @*      <th>
-                Date Of Birth
-            </th>
-            <th>
-                Phone Number
-            </th>*@
             <th>
                 Email Address
             </th>
@@ -53,12 +49,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Surname)
                 </td>
-               @* <td>
-                    @item.DateOfBirth.ToString("dd.MM.yyyy")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.EmailAddress)
                 </td>
@@ -86,3 +76,14 @@
         }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5
+})

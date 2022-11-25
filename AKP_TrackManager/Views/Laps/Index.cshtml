@@ -1,29 +1,50 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.Lap>
+﻿@*@model IEnumerable<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>*@
+
+@model X.PagedList.IPagedList<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
+@if (User.IsInRole("Admin"))
+{
+    <h1>Laps</h1>
+}
+@if (User.IsInRole("User"))
+{
+    <h1>Your Laps</h1>
+}
+<thead>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Add New Lap</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
+            <a asp-action="Index" class="btn btn-success">Show All</a>
+        }
 </p>
+</thead>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MeasuredTime)
+                Absolute Time
+            </th>
+
+            <th>
+                Training Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PenaltyTime)
+                Member
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AbsoluteTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrainingTraining)
+                Car
             </th>
             <th></th>
         </tr>
@@ -32,23 +53,34 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MeasuredTime)
+                @item.AbsoluteTime.ToString("mm':'ss':'ff")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PenaltyTime)
+                @item.TrainingDate.ToString("dd.MM.yyyy")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AbsoluteTime)
+                @String.Join(" ",item.Name,item.Surname) 
+            </td>               
+            <td>
+                    @item.RegPlate                     
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrainingTraining.TrainingId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LapId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LapId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LapId">Delete</a>
+                <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.LapId">Details</a>                     
+                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.LapId">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5  
+})
+

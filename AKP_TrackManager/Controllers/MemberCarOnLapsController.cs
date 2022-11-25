@@ -9,6 +9,8 @@ using AKP_TrackManager.Models;
 
 namespace AKP_TrackManager.Controllers
 {
+    ///Generic controller with poor chance of being used
+    ///
     public class MemberCarOnLapsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -18,14 +20,12 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: MemberCarOnLaps
         public async Task<IActionResult> Index()
         {
             var aKP_TrackManager_devContext = _context.MemberCarOnLaps.Include(m => m.CarCar).Include(m => m.LapLap).Include(m => m.MemberMember);
             return View(await aKP_TrackManager_devContext.ToListAsync());
         }
 
-        // GET: MemberCarOnLaps/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,7 +46,6 @@ namespace AKP_TrackManager.Controllers
             return View(memberCarOnLap);
         }
 
-        // GET: MemberCarOnLaps/Create
         public IActionResult Create()
         {
             ViewData["CarCarId"] = new SelectList(_context.Cars, "CarId", "Make");
@@ -55,9 +54,6 @@ namespace AKP_TrackManager.Controllers
             return View();
         }
 
-        // POST: MemberCarOnLaps/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberLapId,MemberMemberId,CarCarId,LapLapId")] MemberCarOnLap memberCarOnLap)
@@ -74,7 +70,6 @@ namespace AKP_TrackManager.Controllers
             return View(memberCarOnLap);
         }
 
-        // GET: MemberCarOnLaps/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,9 +88,6 @@ namespace AKP_TrackManager.Controllers
             return View(memberCarOnLap);
         }
 
-        // POST: MemberCarOnLaps/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberLapId,MemberMemberId,CarCarId,LapLapId")] MemberCarOnLap memberCarOnLap)
@@ -131,7 +123,6 @@ namespace AKP_TrackManager.Controllers
             return View(memberCarOnLap);
         }
 
-        // GET: MemberCarOnLaps/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,7 +143,6 @@ namespace AKP_TrackManager.Controllers
             return View(memberCarOnLap);
         }
 
-        // POST: MemberCarOnLaps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
