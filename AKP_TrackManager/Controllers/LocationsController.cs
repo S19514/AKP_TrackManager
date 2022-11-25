@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using AKP_TrackManager.Models.DTO;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -19,9 +20,12 @@ namespace AKP_TrackManager.Controllers
         }
 
         // GET: Locations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return View(await _context.Locations.ToListAsync());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<Location> PagedList = new X.PagedList.PagedList<Location>(await _context.Locations.ToListAsync(), pageNumber, pageSize);                                                       
+            return View(PagedList);
         }
 
         // GET: Locations/Details/5

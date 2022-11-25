@@ -1,15 +1,16 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>
+﻿@*@model IEnumerable<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>*@
 
-<script>
-$(document).ready(function () {
-    $("#clientScreenWidth").val($(window).width());
-    $("#clientScreenHeight").val($(window).height());
-});
-</script>
+@model X.PagedList.IPagedList<AKP_TrackManager.Models.DTO.MemberCarOnLapDto>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 @if (User.IsInRole("Admin"))
 {
@@ -23,24 +24,19 @@ $(document).ready(function () {
 <p>
     <a asp-action="Create" class="btn btn-primary">Add New Lap</a>
         @if (User.IsInRole("Admin"))
-    {
-        <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
-        <a asp-action="Index" class="btn btn-success">Show All</a>
-    }
+        {
+            <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
+            <a asp-action="Index" class="btn btn-success">Show All</a>
+        }
 </p>
 </thead>
 <table class="table">
     <thead>
         <tr>
-@*            <th>
-                Measured Time
-            </th>
-            <th>
-                Penalty Time
-            </th>*@
             <th>
                 Absolute Time
             </th>
+
             <th>
                 Training Date
             </th>
@@ -56,12 +52,6 @@ $(document).ready(function () {
     <tbody>
 @foreach (var item in Model) {
         <tr>
-@*            <td>
-                @item.MeasuredTime.ToString("mm':'ss':'ff")
-            </td>
-            <td>
-                @item.PenaltyTime.ToString("mm':'ss':'ff")
-            </td>*@
             <td>
                 @item.AbsoluteTime.ToString("mm':'ss':'ff")
             </td>
@@ -82,3 +72,15 @@ $(document).ready(function () {
         }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5  
+})
+

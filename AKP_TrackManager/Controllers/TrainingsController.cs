@@ -19,10 +19,13 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var aKP_TrackManager_devContext = _context.training.Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);            
-            return View(await aKP_TrackManager_devContext.OrderByDescending(d=>d.Date).ToListAsync());
+            var aKP_TrackManager_devContext = _context.training.OrderByDescending(t=>t.Date).Include(t => t.LocationLocation).Include(t => t.TrackConfigurationTrack);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<training> PagedList = new X.PagedList.PagedList<training>(aKP_TrackManager_devContext, pageNumber, pageSize);
+            return View(PagedList);            
         }
 
         public async Task<IActionResult> Details(int? id)

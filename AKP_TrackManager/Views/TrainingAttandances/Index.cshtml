@@ -1,5 +1,7 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.TrainingAttandance>
-
+﻿@model X.PagedList.IPagedList<AKP_TrackManager.Models.TrainingAttandance>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -51,3 +53,14 @@
 }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5
+})

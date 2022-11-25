@@ -19,7 +19,7 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             
                 if (HttpContext.User.IsInRole("Admin"))
@@ -28,8 +28,12 @@ namespace AKP_TrackManager.Controllers
                                                                 .Include(t => t.MemberMember)
                                                                 .Include(t => t.TrainingTraining)
                                                                 .Include(t => t.TrainingTraining.LocationLocation);
-                    return View(await aKP_TrackManager_devContext.ToListAsync());
-                }
+                    //return View(await aKP_TrackManager_devContext.ToListAsync());
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<TrainingAttandance> PagedList = new X.PagedList.PagedList<TrainingAttandance>(aKP_TrackManager_devContext, pageNumber, pageSize);
+                return View(PagedList);
+            }
                 else
                 {
                     var member = _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefault();
@@ -38,12 +42,15 @@ namespace AKP_TrackManager.Controllers
                                                                 .Include(t => t.TrainingTraining)
                                                                 .Include(t => t.TrainingTraining.LocationLocation)
                                                                 .Where(t => t.MemberMemberId == member.MemberId);
-                    return View(await aKP_TrackManager_devContext.ToListAsync());
-                }                        
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<TrainingAttandance> PagedList = new X.PagedList.PagedList<TrainingAttandance>(aKP_TrackManager_devContext, pageNumber, pageSize);
+                return View(PagedList);
+            }                        
         }
 
         [System.Web.Http.Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexFilterAdmin()
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
             {
@@ -53,7 +60,10 @@ namespace AKP_TrackManager.Controllers
                                                             .Include(t => t.TrainingTraining)
                                                             .Include(t => t.TrainingTraining.LocationLocation)
                                                             .Where(t => t.MemberMemberId == member.MemberId);
-                return View("Index",await aKP_TrackManager_devContext.ToListAsync());
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<TrainingAttandance> PagedList = new X.PagedList.PagedList<TrainingAttandance>(aKP_TrackManager_devContext, pageNumber, pageSize);
+                return View("IndexAdmin",PagedList);
             }
             else
             {

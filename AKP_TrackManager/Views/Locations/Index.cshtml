@@ -1,5 +1,7 @@
-﻿@model IEnumerable<AKP_TrackManager.Models.Location>
-
+﻿@model X.PagedList.IPagedList<AKP_TrackManager.Models.Location>
+    @using X.PagedList.Mvc.Core;
+    @using X.PagedList;
+    @using X.PagedList.Mvc.Common
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,16 +17,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FriendlyName)
+                Friendly Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Town)
+                Town
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Street)
+                Street 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Country)
+                Country
             </th>
             <th></th>
         </tr>
@@ -56,3 +58,14 @@
 }
     </tbody>
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+    ActiveLiElementClass = "active",
+    PageClasses = new[]{ "page-link"},
+    LiElementClasses=new[] { "page-item" },
+    UlElementClasses = new[] { "pagination","justify-content-center", "mt-3" },
+    LinkToNextPageFormat = "Next",
+    LinkToPreviousPageFormat = "Previous",
+    MaximumPageNumbersToDisplay = 5
+})

@@ -20,11 +20,14 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
-            {
-                return View(await _context.Accidents.ToListAsync());
+            {                
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(await _context.Accidents.ToListAsync(), pageNumber, pageSize);
+                return View(PagedList);
             }
             else
             {
@@ -35,14 +38,18 @@ namespace AKP_TrackManager.Controllers
                 foreach(var carAccident in carAccidentByMember)
                 {
                     accidentList.Add(await _context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefaultAsync());
-                }                
-                return View(accidentList);
+                }
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidentList, pageNumber, pageSize);
+
+                return View(PagedList);
                 
 
             }
         }
         [System.Web.Http.Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexFilterAdmin()
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
             {            
@@ -54,7 +61,11 @@ namespace AKP_TrackManager.Controllers
                 {
                     accidentList.Add(await _context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefaultAsync());
                 }
-                return View("Index",accidentList);
+                int pageSize = 1;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidentList, pageNumber, pageSize);
+
+                return View("IndexAdmin",PagedList);
             }
             else
             {

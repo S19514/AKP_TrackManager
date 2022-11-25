@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
+using X.PagedList;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -19,8 +21,11 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+
+            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
+            ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
             if (HttpContext.User.IsInRole("Admin")) // list all for Admin-privileged user
             {
                 List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
@@ -49,7 +54,11 @@ namespace AKP_TrackManager.Controllers
                     });
                     //todo ogarnąć dlaczego data treningu jest taka zwalona
                 }
-                return View(memberCarOnLapsDto);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
+
+                return View(PagedList);
             }
             else
             {
@@ -77,12 +86,16 @@ namespace AKP_TrackManager.Controllers
                         TrainingDate = lap.TrainingTraining.Date
                     });
                 }
-                return View(memberCarOnLapsDto);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t=>t.TrainingDate), pageNumber, pageSize);
+
+                return View(PagedList);
             }
         }
 
         [System.Web.Http.Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexFilterAdmin()
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
             {
@@ -110,7 +123,10 @@ namespace AKP_TrackManager.Controllers
                         TrainingDate = lap.TrainingTraining.Date
                     });
                 }
-                return View("Index", memberCarOnLapsDto);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
+                return View("IndexAdmin", PagedList);
             }
             else
             {
@@ -119,7 +135,7 @@ namespace AKP_TrackManager.Controllers
 
         }
 
-        public async Task<IActionResult> IndexByTrainingId(int? id)
+        public async Task<IActionResult> IndexByTrainingId(int? id, int? page)
         {
            
                 List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
@@ -146,7 +162,11 @@ namespace AKP_TrackManager.Controllers
                         TrainingDate = lap.TrainingTraining.Date
                     });
                 }
-                return View("Index", memberCarOnLapsDto);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
+
+            return View("IndexByTrainingId", PagedList);
 
         }
 
@@ -248,6 +268,7 @@ namespace AKP_TrackManager.Controllers
             return View(pMemberLapOnCar);
         }
 
+        #region not used
         //public async Task<IActionResult> Edit(int? id)
         //{
         //    if (id == null)
@@ -334,7 +355,7 @@ namespace AKP_TrackManager.Controllers
         //            lap.AbsoluteTime = pMemberCarOnLapDto.AbsoluteTime;
         //            lap.PenaltyTime = pMemberCarOnLapDto.PenaltyTime;
         //            lap.TrainingTrainingId = pMemberCarOnLapDto.TrainingTrainingId;
-                    
+
         //            _context.Laps.Update(lap);
         //            await _context.SaveChangesAsync();
         //        }
@@ -357,6 +378,7 @@ namespace AKP_TrackManager.Controllers
         //    ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate", car.CarId);            
         //    return View(pMemberCarOnLapDto);
         //}
+        #endregion
 
         public async Task<IActionResult> Delete(int? id)
         {
