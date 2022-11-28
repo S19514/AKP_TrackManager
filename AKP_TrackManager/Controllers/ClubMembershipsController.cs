@@ -18,14 +18,39 @@ namespace AKP_TrackManager.Controllers
             _context = context;
         }
 
-        // GET: ClubMemberships
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int? page)
         {
-            var aKP_TrackManager_devContext = _context.ClubMemberships.Include(c => c.MemberMember);
-            return View(await aKP_TrackManager_devContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                var aKP_TrackManager_devContext = _context.ClubMemberships.Include(c => c.MemberMember);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
+                return View(PagedList);
+            }
+            else
+            {
+                var member = await _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefaultAsync();
+                var aKP_TrackManager_devContext = await _context.ClubMemberships.Include(c => c.MemberMember).Where(m => m.MemberMemberId == member.MemberId).ToListAsync();
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(aKP_TrackManager_devContext, pageNumber, pageSize);
+                return View(PagedList);
+            }
         }
 
-        // GET: ClubMemberships/Details/5
+        [System.Web.Http.Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
+        {
+            var member = await _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefaultAsync();
+            var aKP_TrackManager_devContext = await _context.ClubMemberships.Include(c => c.MemberMember).Where(m => m.MemberMemberId == member.MemberId).ToListAsync();
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(aKP_TrackManager_devContext, pageNumber, pageSize);
+            return View("IndexAdmin",PagedList);
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,6 +60,7 @@ namespace AKP_TrackManager.Controllers
 
             var clubMembership = await _context.ClubMemberships
                 .Include(c => c.MemberMember)
+                .Include(p=>p.Payments)
                 .FirstOrDefaultAsync(m => m.MembershipId == id);
             if (clubMembership == null)
             {
@@ -44,22 +70,26 @@ namespace AKP_TrackManager.Controllers
             return View(clubMembership);
         }
 
-        // GET: ClubMemberships/Create
         public IActionResult Create()
         {
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
             return View();
         }
 
-        // POST: ClubMemberships/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MembershipId,JoinDate,FeeAmount,MemberMemberId")] ClubMembership clubMembership)
         {
             if (ModelState.IsValid)
             {
+                var member = await _context.Members.FindAsync(clubMembership.MemberMemberId);
+                var memberships = await _context.ClubMemberships.Where(m => m.MemberMemberId == member.MemberId).FirstOrDefaultAsync();
+                if(memberships != null)
+                {
+                    ModelState.AddModelError("Member already has membership", "Cannot assign more than 1 membership to member");
+                    ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
+                    return View(clubMembership);
+                }
                 _context.Add(clubMembership);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,26 +98,22 @@ namespace AKP_TrackManager.Controllers
             return View(clubMembership);
         }
 
-        // GET: ClubMemberships/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var clubMembership = await _context.ClubMemberships.FindAsync(id);
             if (clubMembership == null)
             {
                 return NotFound();
-            }
+            }            
+
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
             return View(clubMembership);
         }
 
-        // POST: ClubMemberships/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MembershipId,JoinDate,FeeAmount,MemberMemberId")] ClubMembership clubMembership)
@@ -95,6 +121,13 @@ namespace AKP_TrackManager.Controllers
             if (id != clubMembership.MembershipId)
             {
                 return NotFound();
+            }
+            var membershipByMember = await _context.ClubMemberships.Where(m => m.MemberMemberId == clubMembership.MemberMemberId).FirstOrDefaultAsync();
+            if(membershipByMember!= null && membershipByMember.MembershipId != clubMembership.MembershipId)
+            {
+                ModelState.AddModelError("Member already has membership", "Cannot assign more than 1 membership to member");
+                ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
+                return View(clubMembership);
             }
 
             if (ModelState.IsValid)
@@ -121,7 +154,6 @@ namespace AKP_TrackManager.Controllers
             return View(clubMembership);
         }
 
-        // GET: ClubMemberships/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,12 +172,16 @@ namespace AKP_TrackManager.Controllers
             return View(clubMembership);
         }
 
-        // POST: ClubMemberships/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var clubMembership = await _context.ClubMemberships.FindAsync(id);
+            var payments = await _context.Payments.Where(c=> c.ClubMembershipMembershipId== id).ToListAsync();
+            foreach (var payment in payments)
+            {
+                _context.Payments.Remove(payment);
+            }
             _context.ClubMemberships.Remove(clubMembership);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

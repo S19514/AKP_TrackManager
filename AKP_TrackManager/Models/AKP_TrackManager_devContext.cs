@@ -8,7 +8,6 @@ namespace AKP_TrackManager.Models
 {
     public partial class AKP_TrackManager_devContext : DbContext
     {
-
         public AKP_TrackManager_devContext(DbContextOptions<AKP_TrackManager_devContext> options)
             : base(options)
         {
@@ -31,6 +30,7 @@ namespace AKP_TrackManager.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -127,6 +127,8 @@ namespace AKP_TrackManager.Models
                 entity.ToTable("ClubMembership");
 
                 entity.Property(e => e.FeeAmount).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.JoinDate).HasColumnType("date");
 
                 entity.Property(e => e.MemberMemberId).HasColumnName("Member_MemberId");
 

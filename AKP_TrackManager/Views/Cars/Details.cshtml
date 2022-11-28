@@ -52,3 +52,39 @@
 <div>
     <a asp-action="Index" class="btn btn-danger">Back to List</a>
 </div>
+<p>
+    <h3>Accidents Of This Car</h3>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Accident Date
+            </th>
+            <th>
+                Someone Injured
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CarAccidentByMembers.Where(c=>c.CarCarId == Model.CarId).ToList())
+        {
+            <tr>
+                <td>
+                    @item.AccidentAccident.AccidentDate.ToString("dd.MM.yyyy")
+                </td>
+                <td>
+                    @item.AccidentAccident.AnyoneInjured
+                </td>
+                <td>                    
+                    @if (User.IsInRole("Admin"))
+                    {                        
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.AccidentAccident.AccidentId">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />

@@ -34,7 +34,7 @@ namespace AKP_TrackManager
         {
             services.AddHttpContextAccessor();
             var connectionString = Configuration.GetConnectionString("SQLConnection");
-            services.AddDbContextPool<AKP_TrackManager_devContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<AKP_TrackManager_devContext>(options => options.UseSqlServer(connectionString),ServiceLifetime.Transient);
 
 
             services.AddControllersWithViews();

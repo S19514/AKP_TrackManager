@@ -7,15 +7,11 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (User.IsInRole("Admin"))
-    {
-        <h1>All Payments</h1>
-    }
-@if (!User.IsInRole("Admin"))
-    {
-        <h1>Your Payments</h1>
-    }
- <thead>
+
+    <h1>Your Payments</h1>
+
+
+<thead>
     <p>
         @if (User.IsInRole("Admin"))
         {
@@ -35,37 +31,41 @@
                 PaymentDate
             </th>
             <th>
+                Club Membership
+            </th>
+            <th>
                 Member
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @item.PaymentDate.ToString("dd.MM.yyyy")
-            </td>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @item.PaymentDate.ToString("dd.MM.yyyy")
+                </td>
+                <td>
                     @String.Join(" ",item.MemberMember.Name, item.MemberMember.Surname)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.PaymentId" class="btn btn-primary">Details</a> 
-                @if(User.IsInRole("Admin"))
-                {
-                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="btn btn-danger">Delete</a>
-                }
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="btn btn-primary">Details</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.PaymentId" class="btn btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <br />
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+@Html.PagedListPager(Model, page => Url.Action("IndexFilterAdmin", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
     ActiveLiElementClass = "active",
     PageClasses = new[]{ "page-link"},
     LiElementClasses=new[] { "page-item" },

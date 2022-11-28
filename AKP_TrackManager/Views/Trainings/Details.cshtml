@@ -98,7 +98,7 @@
                     @item.TrainingTraining.Date.ToString("dd.MM.yyyy") - @Html.DisplayFor(modelItem => item.TrainingTraining.LocationLocation.FriendlyName)
                 </td>              
                     <td>
-                    @if (item.MemberMember.EmailAddress == User.Identity.Name || User.IsInRole("Admin"))
+                    @if (Model.Date > DateTime.UtcNow.Date &&(item.MemberMember.EmailAddress == User.Identity.Name || User.IsInRole("Admin")))
                     {
                         <a asp-action="Delete" class="btn btn-primary" asp-controller="TrainingAttandances" asp-route-id="@item.TrainingAttandanceId">Delete</a>
                     }

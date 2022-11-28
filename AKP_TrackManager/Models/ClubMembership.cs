@@ -13,7 +13,7 @@ namespace AKP_TrackManager.Models
         }
 
         public int MembershipId { get; set; }
-        public int JoinDate { get; set; }
+        public DateTime JoinDate { get; set; }
         public decimal FeeAmount { get; set; }
         public int MemberMemberId { get; set; }
 

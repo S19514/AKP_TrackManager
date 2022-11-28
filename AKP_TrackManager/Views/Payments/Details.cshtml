@@ -12,32 +12,25 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Amount)
+            Amount
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Amount)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentDate)
+            Payment Date
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PaymentDate)
-        </dd>
+        </dd>        
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubMembershipMembership)
+            Member
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClubMembershipMembership.MembershipId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberMember)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberMember.EmailAddress)
+            @String.Join(" ",Model.MemberMember.Name, Model.MemberMember.Surname)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.PaymentId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div>    
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>

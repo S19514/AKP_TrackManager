@@ -68,7 +68,23 @@ namespace AKP_TrackManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(member);
+                if(MemberMailChecker(member.EmailAddress))
+                {
+                    ModelState.AddModelError("Email exists", "Email is taken");                    
+                    ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
+                    return View(member);
+                }
+                _context.Members.Add(member);
+                await _context.SaveChangesAsync();
+
+                ClubMembership membership = new ClubMembership()
+                {
+                    FeeAmount = member.IsStudent ? 50 : 100,
+                    JoinDate = DateTime.Now,
+                    MemberMemberId= member.MemberId,
+                    
+                };
+                _context.ClubMemberships.Add(membership);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -105,7 +121,28 @@ namespace AKP_TrackManager.Controllers
             {
                 try
                 {
-                    _context.Update(member);
+                    var membership = await _context.ClubMemberships.Where(m=>m.MemberMemberId== member.MemberId).FirstOrDefaultAsync();
+                    if(membership == null) 
+                    {
+                        ClubMembership newMembership = new ClubMembership()
+                        {
+                            FeeAmount = member.IsStudent ? 50 : 100,
+                            JoinDate = DateTime.Now
+                        };
+                        _context.ClubMemberships.Add(membership);
+                        await _context.SaveChangesAsync();
+                    }
+                    if(membership.FeeAmount == 50 && !member.IsStudent) //incorrect fee amount according to status
+                    {
+                        membership.FeeAmount = 100;
+                        _context.ClubMemberships.Update(membership);
+                    }
+                    if(membership.FeeAmount == 100 && member.IsStudent) //incorrect fee amount according to status
+                    {
+                        membership.FeeAmount = 50;
+                        _context.ClubMemberships.Update(membership);
+                    }
+                    _context.Members.Update(member);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -148,6 +185,17 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var member = await _context.Members.FindAsync(id);
+            var membership = await _context.ClubMemberships.Where(m=>m.MemberMemberId == id).FirstOrDefaultAsync();
+            if(membership != null)
+            {            
+                var payments = await _context.Payments.Where(p=>p.ClubMembershipMembershipId == membership.MembershipId).ToListAsync();
+
+                foreach(var payment in payments)
+                {
+                    _context.Payments.Remove(payment);
+                }           
+                _context.ClubMemberships.Remove(membership);
+            }
             _context.Members.Remove(member);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -156,6 +204,11 @@ namespace AKP_TrackManager.Controllers
         private bool MemberExists(int id)
         {
             return _context.Members.Any(e => e.MemberId == id);
+        }
+
+        private bool MemberMailChecker(string email)
+        {
+            return _context.Members.Any(e => e.EmailAddress == email);
         }
     }
 }

@@ -5,33 +5,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>ClubMembership</h4>
+<h1>Membership Details</h1>
+<p>    
+</p>
+<div>    
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JoinDate)
+            Join Date
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JoinDate)
+            @Model.JoinDate.ToString("dd.MM.yyyy")
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FeeAmount)
+            Fee Amount
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FeeAmount)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberMember)
+            Member
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberMember.EmailAddress)
+            @String.Join(" ",Model.MemberMember.Name,Model.MemberMember.Surname)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.MembershipId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div>    
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
+<p></p>
+<p>
+    <h3>Payments For This Membership</h3>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Amount
+            </th>
+            <th>
+                Payment Date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Payments.Where(p=>p.ClubMembershipMembershipId == Model.MembershipId).OrderByDescending(p=>p.PaymentDate).ToList())
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @item.PaymentDate.ToString("dd.MM.yyyy")
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" class="btn btn-primary" asp-controller="Payments" asp-route-id="@item.PaymentId">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

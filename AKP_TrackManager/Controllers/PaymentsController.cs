@@ -17,15 +17,44 @@ namespace AKP_TrackManager.Controllers
         {
             _context = context;
         }
-
-        // GET: Payments
-        public async Task<IActionResult> Index()
+        
+        public async Task<IActionResult> Index(int? page)
         {
-            var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember);
-            return View(await aKP_TrackManager_devContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
+                return View(PagedList);
+            }
+            else
+            {
+                var currentMember = _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefault();
+                var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember).Where(c => c.MemberMemberId == currentMember.MemberId);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
+                return View("IndexAdmin",PagedList);
+            }
         }
-
-        // GET: Payments/Details/5
+        [System.Web.Http.Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexFilterAdmin(int? page)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var currentMember = _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefault();
+                var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember).Where(c => c.MemberMemberId == currentMember.MemberId);
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
+                return View("IndexAdmin",PagedList);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,24 +74,34 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Create
         public IActionResult Create()
         {
-            ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships, "MembershipId", "MembershipId");
-            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
-            return View();
+            if (HttpContext.User.IsInRole("Admin"))
+            {
+                ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships, "MembershipId", "MembershipId");
+                ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+                return View();
+            }
+            else
+            {
+                var currentMember = _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefault();
+                ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships.Where(c => c.MemberMemberId == currentMember.MemberId), "MembershipId", "MembershipId");
+                ViewData["MemberMemberId"] = new SelectList(_context.Members.Where(m => m.EmailAddress == User.Identity.Name), "MemberId", "EmailAddress");
+                return View();
+            }
         }
 
-        // POST: Payments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentId,ClubMembershipMembershipId,Amount,PaymentDate,MemberMemberId")] Payment payment)
+        public async Task<IActionResult> Create([Bind("PaymentId,Amount,PaymentDate,MemberMemberId")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(payment);
+                var member = await _context.Members.FindAsync(payment.MemberMemberId);
+                var membership = await _context.ClubMemberships.Where(m => m.MemberMemberId == member.MemberId).FirstOrDefaultAsync();
+                payment.ClubMembershipMembershipId = membership.MembershipId;
+
+                _context.Payments.Add(payment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -71,7 +110,6 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,9 +127,6 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
-        // POST: Payments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,ClubMembershipMembershipId,Amount,PaymentDate,MemberMemberId")] Payment payment)
@@ -126,7 +161,6 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,7 +180,6 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
-        // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

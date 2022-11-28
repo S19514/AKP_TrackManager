@@ -11,21 +11,24 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <h4 style="color:red">
+            @Html.ValidationSummary(false)
+        </h4>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MembershipId" />
             <div class="form-group">
-                <label asp-for="JoinDate" class="control-label"></label>
-                <input asp-for="JoinDate" class="form-control" />
+                <label asp-for="JoinDate" class="control-label">Join Date</label>
+                <input asp-for="JoinDate" type="date" class="form-control" />
                 <span asp-validation-for="JoinDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FeeAmount" class="control-label"></label>
+                <label asp-for="FeeAmount" class="control-label">Fee Amount</label>
                 <input asp-for="FeeAmount" class="form-control" />
                 <span asp-validation-for="FeeAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MemberMemberId" class="control-label"></label>
+                <label asp-for="MemberMemberId" class="control-label">Member</label>
                 <select asp-for="MemberMemberId" class="form-control" asp-items="ViewBag.MemberMemberId"></select>
                 <span asp-validation-for="MemberMemberId" class="text-danger"></span>
             </div>
@@ -37,6 +40,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
 </div>
 

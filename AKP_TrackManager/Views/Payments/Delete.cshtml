@@ -13,34 +13,28 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Amount)
+            Amount
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Amount)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentDate)
+            Payment Date
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentDate)
-        </dd>
+            @Model.PaymentDate.ToString("dd.MM.yyyy")
+        </dd>        
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubMembershipMembership)
+            Member
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClubMembershipMembership.MembershipId)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberMember)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberMember.EmailAddress)
+            @String.Join(" ",Model.MemberMember.Name, Model.MemberMember.Surname)
         </dd class>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="PaymentId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-primary" href="javascript:void(0);" onclick="history.go(-1);">Back to previous page</a>
     </form>
 </div>

@@ -156,7 +156,7 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }            
-            var car = await _context.Cars.FindAsync(id);
+            var car = await _context.Cars.Where(c=>c.CarId == id).Include(c=>c.CarAccidentByMembers).FirstOrDefaultAsync();
             if (car == null)
             {
                 return NotFound();
@@ -166,6 +166,12 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
+
+            foreach(var acc in car.CarAccidentByMembers)
+            {
+                acc.AccidentAccident = await _context.Accidents.FindAsync(acc.AccidentAccidentId);
+            };
+
             var member = await _context.Members.FindAsync(carMember.MemberMemberId);
             if (member == null)
             {
@@ -187,7 +193,8 @@ namespace AKP_TrackManager.Controllers
                 Model = car.Model.Trim(),
                 PhoneNumber = member.PhoneNumber.Trim(),
                 Surname = member.Surname.Trim(),
-                RegPlate = car.RegPlate.Replace(" ", "")
+                RegPlate = car.RegPlate.Replace(" ", ""),
+                CarAccidentByMembers = car.CarAccidentByMembers
             };
 
             return View(carMemberDto);
