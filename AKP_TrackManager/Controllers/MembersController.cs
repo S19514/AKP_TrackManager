@@ -32,7 +32,7 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             var members = _context.Members.Include(m => m.RoleRole);
-            int pageSize = 3;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             X.PagedList.PagedList<Member> PagedList = new X.PagedList.PagedList<Member>(members, pageNumber, pageSize);
             return View(PagedList);            
