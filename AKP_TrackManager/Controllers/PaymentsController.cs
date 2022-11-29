@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -38,7 +40,7 @@ namespace AKP_TrackManager.Controllers
                 return View("IndexAdmin",PagedList);
             }
         }
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (User.IsInRole("Admin"))
@@ -71,26 +73,33 @@ namespace AKP_TrackManager.Controllers
                 return NotFound();
             }
 
-            return View(payment);
-        }
-
-        public IActionResult Create()
-        {
-            if (HttpContext.User.IsInRole("Admin"))
+            if (User.Identity.Name == payment.MemberMember.EmailAddress)
             {
-                ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships, "MembershipId", "MembershipId");
-                ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
-                return View();
+                return View(payment);
             }
             else
             {
-                var currentMember = _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefault();
-                ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships.Where(c => c.MemberMemberId == currentMember.MemberId), "MembershipId", "MembershipId");
-                ViewData["MemberMemberId"] = new SelectList(_context.Members.Where(m => m.EmailAddress == User.Identity.Name), "MemberId", "EmailAddress");
-                return View();
+               return RedirectToAction(nameof(Index));
             }
         }
-
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            //if (HttpContext.User.IsInRole("Admin"))
+            //{
+                ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships, "MembershipId", "MembershipId");
+                ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+                return View();
+            //}
+            //else
+            //{
+            //    var currentMember = _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefault();
+            //    ViewData["ClubMembershipMembershipId"] = new SelectList(_context.ClubMemberships.Where(c => c.MemberMemberId == currentMember.MemberId), "MembershipId", "MembershipId");
+            //    ViewData["MemberMemberId"] = new SelectList(_context.Members.Where(m => m.EmailAddress == User.Identity.Name), "MemberId", "EmailAddress");
+            //    return View();
+            //}
+        }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,Amount,PaymentDate,MemberMemberId")] Payment payment)
@@ -110,6 +119,7 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -127,6 +137,7 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,ClubMembershipMembershipId,Amount,PaymentDate,MemberMemberId")] Payment payment)
@@ -161,6 +172,7 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -180,6 +192,7 @@ namespace AKP_TrackManager.Controllers
             return View(payment);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

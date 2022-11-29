@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class trainingsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -53,6 +55,7 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["LocationFriendlyName"] = new SelectList(_context.Locations, "LocationId", "FriendlyName");
@@ -87,6 +90,7 @@ namespace AKP_TrackManager.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TrainingId,TrackConfigurationTrackId,Date,StartTime,EndTime,LocationLocationId")] training training)
@@ -102,6 +106,7 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,6 +124,7 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TrainingId,TrackConfigurationTrackId,Date,StartTime,EndTime,LocationLocationId")] training training)
@@ -153,6 +159,7 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -172,6 +179,7 @@ namespace AKP_TrackManager.Controllers
             return View(training);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

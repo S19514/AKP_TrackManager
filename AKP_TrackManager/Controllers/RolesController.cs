@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RolesController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -17,14 +20,12 @@ namespace AKP_TrackManager.Controllers
         {
             _context = context;
         }
-
-        // GET: Roles
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Roles.ToListAsync());
         }
-
-        // GET: Roles/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,16 +42,12 @@ namespace AKP_TrackManager.Controllers
 
             return View(role);
         }
-
-        // GET: Roles/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Roles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RoleId,RoleName")] Role role)
@@ -64,7 +61,6 @@ namespace AKP_TrackManager.Controllers
             return View(role);
         }
 
-        // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,9 +76,6 @@ namespace AKP_TrackManager.Controllers
             return View(role);
         }
 
-        // POST: Roles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RoleId,RoleName")] Role role)
@@ -115,7 +108,6 @@ namespace AKP_TrackManager.Controllers
             return View(role);
         }
 
-        // GET: Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +125,6 @@ namespace AKP_TrackManager.Controllers
             return View(role);
         }
 
-        // POST: Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

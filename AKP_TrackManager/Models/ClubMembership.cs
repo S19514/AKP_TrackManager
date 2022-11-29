@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,8 +14,10 @@ namespace AKP_TrackManager.Models
         }
 
         public int MembershipId { get; set; }
+        [Required]
         public DateTime JoinDate { get; set; }
         public decimal FeeAmount { get; set; }
+        
         public int MemberMemberId { get; set; }
 
         public virtual Member MemberMember { get; set; }

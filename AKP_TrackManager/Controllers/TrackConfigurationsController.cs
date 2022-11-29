@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TrackConfigurationsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;

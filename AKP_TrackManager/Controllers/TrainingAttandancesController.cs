@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class TrainingAttandancesController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -49,7 +52,7 @@ namespace AKP_TrackManager.Controllers
             }                        
         }
 
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
@@ -71,7 +74,7 @@ namespace AKP_TrackManager.Controllers
             }
 
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -113,7 +116,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", trainingAttandance.TrainingTrainingId);
             return View(trainingAttandance);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -131,6 +134,7 @@ namespace AKP_TrackManager.Controllers
             return View(trainingAttandance);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TrainingAttandanceId,TrainingTrainingId,MemberMemberId")] TrainingAttandance trainingAttandance)

@@ -6,10 +6,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Automobilklub Members</h1>
+<h1>Members</h1>
 
 <p>    
-    <a asp-action="Create" class="btn btn-primary">Add New Member</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Add New Member</a>
+    }
 </p>
 
 <table class="table">

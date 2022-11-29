@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class CarsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -53,6 +55,7 @@ namespace AKP_TrackManager.Controllers
                             PhoneNumber = singleMember.PhoneNumber,
                             Surname = singleMember.Surname,
                             RegPlate = car.RegPlate
+                            
 
                         });
                     
@@ -102,7 +105,7 @@ namespace AKP_TrackManager.Controllers
             }
         }
 
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))

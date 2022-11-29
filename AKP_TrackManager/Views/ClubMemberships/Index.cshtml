@@ -9,11 +9,11 @@
 }
   @if (User.IsInRole("Admin"))
     {
-        <h1>Memberships</h1>
+        <h1>All Memberships</h1>
     }
 @if (!User.IsInRole("Admin"))
 {
-    <h1>Membership</h1>
+    <h1>Your Membership</h1>
 }
 
 <p>

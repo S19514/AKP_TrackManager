@@ -38,6 +38,7 @@ namespace AKP_TrackManager.Controllers
             return View(PagedList);            
         }
 
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -56,12 +57,14 @@ namespace AKP_TrackManager.Controllers
             return View(member);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberId,Name,Surname,DateOfBirth,PhoneNumber,EmailAddress,IsAscendant,Password,IsStudent,RoleRoleId,IsBlocked")] Member member)
@@ -91,7 +94,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -107,7 +110,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberId,Name,Surname,DateOfBirth,PhoneNumber,EmailAddress,IsAscendant,Password,IsStudent,RoleRoleId,IsBlocked")] Member member)
@@ -161,7 +164,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -179,7 +182,7 @@ namespace AKP_TrackManager.Controllers
 
             return View(member);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

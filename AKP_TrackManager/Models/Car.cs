@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -15,10 +16,13 @@ namespace AKP_TrackManager.Models
         }
 
         public int CarId { get; set; }
+        [Required]
         public string Make { get; set; }
+        [Required]
         public string Model { get; set; }
         public decimal EngingeCapacity { get; set; }
         public int EnginePower { get; set; }
+        [Required]
         public string RegPlate { get; set; }
 
         public virtual ICollection<CarAccidentByMember> CarAccidentByMembers { get; set; }

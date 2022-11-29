@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LocationsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;

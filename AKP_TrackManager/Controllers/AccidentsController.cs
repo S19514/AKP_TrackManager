@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace AKP_TrackManager.Controllers
 {
+    //[Authorize]
     public class AccidentsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -19,7 +22,7 @@ namespace AKP_TrackManager.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         public async Task<IActionResult> Index(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
@@ -43,12 +46,10 @@ namespace AKP_TrackManager.Controllers
                 int pageNumber = (page ?? 1);
                 X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidentList, pageNumber, pageSize);
 
-                return View(PagedList);
-                
-
+                return View(PagedList);                
             }
         }
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
@@ -61,7 +62,7 @@ namespace AKP_TrackManager.Controllers
                 {
                     accidentList.Add(await _context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefaultAsync());
                 }
-                int pageSize = 1;
+                int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidentList, pageNumber, pageSize);
 
@@ -70,10 +71,9 @@ namespace AKP_TrackManager.Controllers
             else
             {
                return RedirectToAction(nameof(Index));
-            }
-            
+            }            
         }
-
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -114,16 +114,23 @@ namespace AKP_TrackManager.Controllers
                 RegPlate = car.RegPlate
             };
             
-
             return View(accidentCarMemberDto);
         }
-
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            if (!User.IsInRole("Admin"))
+            {
+                ViewData["EmailAddress"] = new SelectList(_context.Members.Where(m=>m.EmailAddress == User.Identity.Name), "MemberId", "EmailAddress");
+            }
+            else
+            {
+                ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            }
             ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate");
             return View();
         }
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AccidentId,AccidentDate,Severity,AnyoneInjured,MemberId,CarId")] AccidentCarMemberDto accident)
@@ -152,7 +159,7 @@ namespace AKP_TrackManager.Controllers
             }
             return View(accident);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -187,6 +194,7 @@ namespace AKP_TrackManager.Controllers
       
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("AccidentId,AccidentDate,Severity,AnyoneInjured,MemberId,CarId")] AccidentCarMemberDto accident)
         {
             if (id != accident.AccidentId)
@@ -230,6 +238,7 @@ namespace AKP_TrackManager.Controllers
             return View(accident);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -261,7 +270,7 @@ namespace AKP_TrackManager.Controllers
 
             return View(accidentCarMemberDto);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

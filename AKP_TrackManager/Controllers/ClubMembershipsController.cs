@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class ClubMembershipsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -40,7 +42,7 @@ namespace AKP_TrackManager.Controllers
             }
         }
 
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             var member = await _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefaultAsync();
@@ -67,15 +69,23 @@ namespace AKP_TrackManager.Controllers
                 return NotFound();
             }
 
-            return View(clubMembership);
+            if (HttpContext.User.Identity.Name == clubMembership.MemberMember.EmailAddress)
+            {
+                return View(clubMembership);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MembershipId,JoinDate,FeeAmount,MemberMemberId")] ClubMembership clubMembership)
@@ -97,7 +107,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
             return View(clubMembership);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -113,7 +123,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
             return View(clubMembership);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MembershipId,JoinDate,FeeAmount,MemberMemberId")] ClubMembership clubMembership)
@@ -153,7 +163,7 @@ namespace AKP_TrackManager.Controllers
             ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
             return View(clubMembership);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,7 +181,7 @@ namespace AKP_TrackManager.Controllers
 
             return View(clubMembership);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

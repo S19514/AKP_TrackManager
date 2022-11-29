@@ -6,14 +6,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (User.IsInRole("Admin"))
-{
-    <h1>Training Attendances</h1>
-}
-@if (User.IsInRole("User"))
-{
-    <h1>Your Training Attendances</h1>
-}
+    <h1>Your Attendances</h1>
+
+
 <thead>
     <p>
         @if (User.IsInRole("Admin"))

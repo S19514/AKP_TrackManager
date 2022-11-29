@@ -9,9 +9,11 @@ using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
 using X.PagedList;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AKP_TrackManager.Controllers
 {
+    [Authorize]
     public class LapsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
@@ -51,8 +53,7 @@ namespace AKP_TrackManager.Controllers
                         PenaltyTime = lap.PenaltyTime,
                         MeasuredTime = lap.MeasuredTime,
 
-                    });
-                    //todo ogarnąć dlaczego data treningu jest taka zwalona
+                    });                    
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
@@ -94,7 +95,7 @@ namespace AKP_TrackManager.Controllers
             }
         }
 
-        [System.Web.Http.Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
             if (HttpContext.User.IsInRole("Admin"))
@@ -165,8 +166,12 @@ namespace AKP_TrackManager.Controllers
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
-
-            return View("IndexByTrainingId", PagedList);
+            if (User.Identity.Name == member.EmailAddress)
+            {
+                return View("IndexByTrainingId", PagedList);
+            }
+            else
+               return RedirectToAction(nameof(Index));
 
         }
 
@@ -219,7 +224,13 @@ namespace AKP_TrackManager.Controllers
                 Make = car.Make,
                 TrainingLocationString = await _context.Locations.Where(l => l.LocationId == lap.TrainingTraining.LocationLocationId).Select(l => l.FriendlyName).FirstOrDefaultAsync()
             };
-            return View(memberCarOnLapDto);
+
+            if (User.Identity.Name == member.EmailAddress)
+            {
+                return View(memberCarOnLapDto);
+            }
+            else
+                return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Create()
@@ -259,10 +270,18 @@ namespace AKP_TrackManager.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["TrainingTrainingId"] = new SelectList(_context.training, "TrainingId", "TrainingId", pMemberLapOnCar.TrainingTrainingId);
+
             var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date",pMemberLapOnCar.TrainingTrainingId);
-            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress",pMemberLapOnCar.MemberId);
+            if (User.IsInRole("Admin"))
+            {
+                ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress", pMemberLapOnCar.MemberId);
+            }
+            else
+            {
+                ViewData["EmailAddress"] = new SelectList(_context.Members.Where(m=>m.EmailAddress == User.Identity.Name), "MemberId", "EmailAddress", pMemberLapOnCar.MemberId);
+            }
+
             ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate",pMemberLapOnCar.CarId);
 
             return View(pMemberLapOnCar);
@@ -429,7 +448,12 @@ namespace AKP_TrackManager.Controllers
                 Make = car.Make,
                 TrainingLocationString = await _context.Locations.Where(l => l.LocationId == lap.TrainingTraining.LocationLocationId).Select(l => l.FriendlyName).FirstOrDefaultAsync()
             };
-            return View(memberCarOnLapDto);
+            if (User.Identity.Name == member.EmailAddress)
+            {
+                return View(memberCarOnLapDto);
+            }
+            else
+                return RedirectToAction(nameof(Index));
         }
 
         [HttpPost, ActionName("Delete")]
