@@ -6,6 +6,13 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 
 <h1>Track Configurations</h1>
 
@@ -15,16 +22,16 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="hidecolumn">
                 Reversable
             </th>
-            <th>
+            <th class="hidecolumn">
                 Length
             </th>
             <th>
                 Preset Name
             </th>
-            <th>
+            <th class="hidecolumn">
                 Preset Number
             </th>
             <th>
@@ -36,16 +43,16 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.Reversable)
             </td>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.Length)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PresetName)
             </td>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.PresetNumber)
             </td>
             <td>

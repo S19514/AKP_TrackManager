@@ -4,12 +4,19 @@
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @using X.PagedList.Mvc.Common
-@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 
 
 @if (User.IsInRole("Admin"))
@@ -40,12 +47,24 @@
             <th>
                 Training Date
             </th>
-            <th>
-                Member
+            @if (!User.IsInRole("Admin"))
+            {
+                <th class="hidecolumn">
+                    Member
+                </th>
+                <th>
+                    Car
             </th>
-            <th>
-                Car
-            </th>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <th >
+                    Member
+                </th>
+                <th class="hidecolumn">
+                    Car
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -58,12 +77,23 @@
             <td>
                 @item.TrainingDate.ToString("dd.MM.yyyy")
             </td>
-            <td>
+            @if(!User.IsInRole("Admin")){
+            <td class="hidecolumn">
                 @String.Join(" ",item.Name,item.Surname) 
             </td>               
             <td>
                     @item.RegPlate                     
             </td>
+            }
+                @if (User.IsInRole("Admin"))
+                {
+                    <td >
+                        @String.Join(" ",item.Name,item.Surname)
+                    </td>
+                    <td class="hidecolumn">
+                        @item.RegPlate
+                    </td>
+                }
             <td>
                 <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.LapId">Details</a>                     
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.LapId">Delete</a>

@@ -5,7 +5,13 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 <h1>Members</h1>
 
 <p>    
@@ -18,7 +24,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="hidecolumn">
                 Name
             </th>
             <th>
@@ -27,16 +33,16 @@
             <th>
                 Email Address
             </th>
-            <th>
+            <th class="hidecolumn">
                 Ascendant
             </th>
-            <th>
+            <th class="hidecolumn">
                 Student
             </th>
-            <th>
+            <th class="hidecolumn">
                 Blocked
             </th>
-            <th>
+            <th class="hidecolumn">
                 Role
             </th>
             <th></th>
@@ -46,7 +52,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
@@ -55,16 +61,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.EmailAddress)
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.IsAscendant)
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.IsStudent)
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.IsBlocked)
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.RoleRole.RoleName)
                 </td>
                 <td>

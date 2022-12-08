@@ -475,3 +475,5 @@ C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Payments\IndexAdmin.cshtml.g.cs
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\ClubMemberships\IndexAdmin.cshtml.g.cs
 C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\Razor\Views\Errors\Unauthorized.cshtml.g.cs
+C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\AKP_TrackManager.Properties.Resources.resources
+C:\Users\Piotr\Documents\GitHub\AKP_TrackManager\AKP_TrackManager\obj\Debug\net5.0\AKP_TrackManager.csproj.GenerateResource.cache

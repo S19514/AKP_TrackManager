@@ -7,6 +7,13 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
     <h1>Your Membership</h1>
     <thead>
         <p>
@@ -24,7 +31,7 @@
             <th>
                 Join Date
             </th>
-            <th>
+            <th class="hidecolumn">
                 Fee Amount
             </th>
             <th>
@@ -40,7 +47,7 @@
                 <td>
                     @item.JoinDate.ToString("dd.MM.yyyy")
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @item.FeeAmount
                 </td>
                 <td>

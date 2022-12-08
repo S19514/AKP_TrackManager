@@ -6,6 +6,13 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 
 <h1>Trainings</h1>
  @if(User.IsInRole("Admin"))
@@ -23,7 +30,7 @@
             <th>
             Location Name
             </th>
-            <th>
+            <th class="hidecolumn">
             Preset Name
             </th>
             <th></th>
@@ -38,7 +45,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.LocationLocation.FriendlyName)
             </td>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.TrackConfigurationTrack.PresetName)
             </td>
             <td>

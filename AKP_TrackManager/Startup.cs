@@ -32,6 +32,14 @@ namespace AKP_TrackManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Track Manager",
+                    Description = "Track Manager .net core mvc"
+                }); 
+                });
             services.AddHttpContextAccessor();
             var connectionString = Configuration.GetConnectionString("SQLConnection");
             services.AddDbContext<AKP_TrackManager_devContext>(options => options.UseSqlServer(connectionString),ServiceLifetime.Transient);
@@ -85,7 +93,10 @@ namespace AKP_TrackManager
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/error/{0}");
+                app.UseHsts();
             }
             else
             {

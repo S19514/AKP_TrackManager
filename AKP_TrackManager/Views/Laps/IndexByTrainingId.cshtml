@@ -4,13 +4,19 @@
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @using X.PagedList.Mvc.Common
-@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 
 
     <h1>Your Laps</h1>
@@ -27,7 +33,7 @@
             <th>
                 Training Date
             </th>
-            <th>
+            <th class="hidecolumn">
                 Member
             </th>
             <th>
@@ -46,7 +52,7 @@
                 <td>
                     @item.TrainingDate.ToString("dd.MM.yyyy")
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @String.Join(" ",item.Name,item.Surname)
                 </td>
                 <td>

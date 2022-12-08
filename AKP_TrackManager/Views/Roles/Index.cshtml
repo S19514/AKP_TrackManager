@@ -7,16 +7,16 @@
 
 <h1>Roles</h1>
 
-<p>
+@*<p>
     <a asp-action="Create" class="btn btn-primary">Add New Role</a>
-</p>
+</p>*@
 <table class="table">
     <thead>
         <tr>
             <th>
                 Role Name
             </th>
-            <th></th>
+            @*<th></th>*@
         </tr>
     </thead>
     <tbody>
@@ -25,10 +25,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.RoleName)
             </td>
-            <td>                
+           @* <td>                
                     <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.RoleId">Edit</a>
                     <a asp-action="Delete" class="btn btn-danger"  asp-route-id="@item.RoleId">Delete</a>
-            </td>
+            </td>*@
         </tr>
 }
     </tbody>

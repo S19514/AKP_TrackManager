@@ -6,6 +6,13 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    @@media screen and (max-width: 1024px) {
+        .hidecolumn {
+            display: none !important;
+        }
+    }
+</style>
 <h1>Locations</h1>
    @if (User.IsInRole("Admin"))
     {
@@ -19,13 +26,13 @@
             <th>
                 Friendly Name
             </th>
-            <th>
+            <th class="hidecolumn">
                 Town
             </th>
             <th>
                 Street 
             </th>
-            <th>
+            <th class="hidecolumn">
                 Country
             </th>
             <th></th>
@@ -37,13 +44,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.FriendlyName)
             </td>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.Town)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Street)
             </td>
-            <td>
+                <td class="hidecolumn">
                 @Html.DisplayFor(modelItem => item.Country)
             </td>
             <td>

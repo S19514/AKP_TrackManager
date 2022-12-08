@@ -2,6 +2,15 @@
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @using X.PagedList.Mvc.Common
+
+<style>
+ @@media screen and (max-width: 1024px) {
+    .hidecolumn {
+        display: none !important;
+    }
+}
+</style>
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -31,13 +40,14 @@
             <th>
                 Make
             </th>
-            <th>
+           
+            <th class="hidecolumn">
                 Model
             </th>
-            <th>
+            <th class="hidecolumn">
                 Engine Power(HP)
             </th>
-            <th>
+            <th >
                 Registration plate
             </th>
             <th>
@@ -53,11 +63,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Make)
                 </td>
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.Model)
                 </td>
 
-                <td>
+                <td class="hidecolumn">
                     @Html.DisplayFor(modelItem => item.EnginePower)
                 </td>
                 <td>
@@ -79,7 +89,6 @@
     </tbody>
 </table>
 <br />
-
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
     ActiveLiElementClass = "active",
     PageClasses = new[]{ "page-link"},

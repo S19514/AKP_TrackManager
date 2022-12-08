@@ -69,7 +69,7 @@ namespace AKP_TrackManager.Controllers
                 return NotFound();
             }
 
-            if (HttpContext.User.Identity.Name == clubMembership.MemberMember.EmailAddress)
+            if (HttpContext.User.Identity.Name == clubMembership.MemberMember.EmailAddress || HttpContext.User.IsInRole("Admin"))
             {
                 return View(clubMembership);
             }
