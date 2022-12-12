@@ -94,23 +94,28 @@ namespace AKP_TrackManager.Controllers
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
-        {
+        {            
             if (id == null)
             {
                 return NotFound();
             }
 
-            var member = await _context.Members.FindAsync(id);
+            var member = await _context.Members.FindAsync(id);            
             if (member == null)
             {
                 return NotFound();
             }
+            if (member.EmailAddress != User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             ViewData["RoleRoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", member.RoleRoleId);
             return View(member);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberId,Name,Surname,DateOfBirth,PhoneNumber,EmailAddress,IsAscendant,Password,IsStudent,RoleRoleId,IsBlocked")] Member member)
