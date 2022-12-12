@@ -151,7 +151,14 @@ namespace AKP_TrackManager.Controllers
                         _context.ClubMemberships.Update(membership);
                     }
                     _context.Members.Update(member);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        string mesage = ex.Message;
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
