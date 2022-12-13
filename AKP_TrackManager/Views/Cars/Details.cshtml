@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+
 
 <div>
     <h4>Car</h4>
@@ -75,7 +75,8 @@
                     @item.AccidentAccident.AccidentDate.ToString("dd.MM.yyyy")
                 </td>
                 <td>
-                    @item.AccidentAccident.AnyoneInjured
+
+                    <input type="checkbox" disabled checked=" @item.AccidentAccident.AnyoneInjured" />
                 </td>
                 <td>                    
                     @if (User.IsInRole("Admin"))
