@@ -64,7 +64,7 @@
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Delete" class="btn btn-primary" asp-controller="Payments" asp-route-id="@item.PaymentId">Delete</a>
+                        <a asp-action="Delete" class="btn btn-danger" asp-controller="Payments" asp-route-id="@item.PaymentId">Delete</a>
                     }
                 </td>
             </tr>

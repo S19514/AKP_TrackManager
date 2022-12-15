@@ -53,16 +53,16 @@
             @Html.DisplayFor(model => model.EndTime)
         </dd>
         <dt class = "col-sm-2">
-           Location Name
+           Location 
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.LocationLocation.FriendlyName)
         </dd>
         <dt class = "col-sm-2">
-           Preset Name
+           Preset 
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrackConfigurationTrack.PresetNumber)
+            @Html.DisplayFor(model => model.TrackConfigurationTrack.PresetName)
         </dd>
     </dl>
 </div>
@@ -70,7 +70,6 @@
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
     
 </div>
-@*<partial name="../TrainingAttandances/PartialIndex" model="Model.TrainingAttandances.ToList()"  />*@
 <p></p>
 <p>
     <h3>Sign Up List</h3>
@@ -100,7 +99,7 @@
                     <td>
                     @if (Model.Date > DateTime.UtcNow.Date &&(item.MemberMember.EmailAddress == User.Identity.Name || User.IsInRole("Admin")))
                     {
-                        <a asp-action="Delete" class="btn btn-primary" asp-controller="TrainingAttandances" asp-route-id="@item.TrainingAttandanceId">Delete</a>
+                        <a asp-action="Delete" class="btn btn-danger" asp-controller="TrainingAttandances" asp-route-id="@item.TrainingAttandanceId">Delete</a>
                     }
                 </td>
                 
