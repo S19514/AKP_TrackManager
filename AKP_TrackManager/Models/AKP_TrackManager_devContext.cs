@@ -63,7 +63,7 @@ namespace AKP_TrackManager.Models
                 entity.Property(e => e.RegPlate)
                     .IsRequired()
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false);                              
             });
 
             modelBuilder.Entity<CarAccidentByMember>(entity =>
@@ -222,6 +222,7 @@ namespace AKP_TrackManager.Models
                     .HasForeignKey(d => d.RoleRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Member_Role");
+                
             });
 
             modelBuilder.Entity<MemberCarOnLap>(entity =>

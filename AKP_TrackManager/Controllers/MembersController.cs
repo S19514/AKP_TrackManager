@@ -211,6 +211,30 @@ namespace AKP_TrackManager.Controllers
                 }           
                 _context.ClubMemberships.Remove(membership);
             }
+            var carAccidentsByMember = await _context.CarAccidentByMembers.Where(cm => cm.MemberMemberId == id).ToListAsync();
+            foreach (var accident in carAccidentsByMember)
+            {
+                _context.CarAccidentByMembers.Remove(accident);
+                _context.Accidents.Remove(_context.Accidents.Find(accident.AccidentAccidentId));
+            }
+            var trainingAttendances = await _context.TrainingAttandances.Where(cm => cm.MemberMemberId == id).ToListAsync();
+            foreach(var training in trainingAttendances)
+            {
+                _context.TrainingAttandances.Remove(training);
+            }
+            var memberCarOnLaps = await _context.MemberCarOnLaps.Where(mcol => mcol.MemberMemberId!= id).ToListAsync();
+            foreach(var lap in memberCarOnLaps)
+            {
+                _context.MemberCarOnLaps.Remove(lap);
+                _context.Laps.Remove(_context.Laps.Find(lap.LapLapId));
+            }
+            var carsMember = await _context.CarMembers.Where(cm => cm.MemberMemberId == id).ToListAsync();
+            foreach (var car in carsMember)
+            {
+                _context.CarMembers.Remove(car);
+                _context.Cars.Remove(_context.Cars.Find(car.CarCarId));
+            }
+
             _context.Members.Remove(member);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

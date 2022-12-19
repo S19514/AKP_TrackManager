@@ -351,10 +351,29 @@ namespace AKP_TrackManager.Controllers
         {
             var car = await _context.Cars.FindAsync(id);
             var carMember = await _context.CarMembers.Where(cm=>cm.CarCarId == id).FirstOrDefaultAsync();
+            var carAccidents = await _context.CarAccidentByMembers.Where(ca => ca.CarCarId == id).ToListAsync();
+            var carLaps = await _context.MemberCarOnLaps.Where(cl => cl.CarCarId == id).ToListAsync();
+          
+            foreach(var accident in carAccidents)
+            {
+                _context.CarAccidentByMembers.Remove(accident);
+                _context.Accidents.Remove(_context.Accidents.Find(accident.AccidentAccidentId));
+            }
+            foreach(var lap in carLaps)
+            {
+                _context.MemberCarOnLaps.Remove(lap);
+                _context.Laps.Remove(_context.Laps.Find(lap.LapLapId));
+            }
             _context.CarMembers.Remove(carMember);
             _context.Cars.Remove(car);
-            
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                string x = ex.Message;
+            }
             return RedirectToAction(nameof(Index));
         }
 
