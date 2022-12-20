@@ -48,6 +48,9 @@ namespace AKP_TrackManager
             services.AddControllersWithViews();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<ITrainingRepository, TrainingRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IAccidentRepository, AccidentRepository>();
+            services.AddScoped<IMembershipRepository, MembershipRepository>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -95,7 +98,7 @@ namespace AKP_TrackManager
         {
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
+                 app.UseDeveloperExceptionPage();
                 app.UseExceptionHandler("/Home/Error");
                 app.UseStatusCodePagesWithRedirects("/error/{0}");
                 app.UseHsts();

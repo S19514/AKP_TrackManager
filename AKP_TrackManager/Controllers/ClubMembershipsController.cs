@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AKP_TrackManager.Models;
 using Microsoft.AspNetCore.Authorization;
+using AKP_TrackManager.Interfaces;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -14,43 +15,24 @@ namespace AKP_TrackManager.Controllers
     public class ClubMembershipsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
+        private IMembershipRepository _membershipRepository;
 
-        public ClubMembershipsController(AKP_TrackManager_devContext context)
+        public ClubMembershipsController(AKP_TrackManager_devContext context, IMembershipRepository membershipRepository)
         {
             _context = context;
+            _membershipRepository = membershipRepository;
         }
-
 
         public async Task<IActionResult> Index(int? page)
         {
-            if (User.IsInRole("Admin"))
-            {
-                var aKP_TrackManager_devContext = _context.ClubMemberships.Include(c => c.MemberMember);
-                int pageSize = 10;
-                int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
-                return View(PagedList);
-            }
-            else
-            {
-                var member = await _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefaultAsync();
-                var aKP_TrackManager_devContext = await _context.ClubMemberships.Include(c => c.MemberMember).Where(m => m.MemberMemberId == member.MemberId).ToListAsync();
-                int pageSize = 10;
-                int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(aKP_TrackManager_devContext, pageNumber, pageSize);
-                return View(PagedList);
-            }
+            return View(await _membershipRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
-            var member = await _context.Members.Where(m => m.EmailAddress == User.Identity.Name).FirstOrDefaultAsync();
-            var aKP_TrackManager_devContext = await _context.ClubMemberships.Include(c => c.MemberMember).Where(m => m.MemberMemberId == member.MemberId).ToListAsync();
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(aKP_TrackManager_devContext, pageNumber, pageSize);
-            return View("IndexAdmin",PagedList);
+            
+            return View("IndexAdmin",await _membershipRepository.IndexFilterAdmin(page,User.Identity.Name));
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -59,29 +41,17 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
-
-            var clubMembership = await _context.ClubMemberships
-                .Include(c => c.MemberMember)
-                .Include(p=>p.Payments)
-                .FirstOrDefaultAsync(m => m.MembershipId == id);
+            var clubMembership = await _membershipRepository.Details(id, User.Identity.Name, User.IsInRole("Admin"));
             if (clubMembership == null)
-            {
-                return NotFound();
-            }
-
-            if (HttpContext.User.Identity.Name == clubMembership.MemberMember.EmailAddress || HttpContext.User.IsInRole("Admin"))
-            {
-                return View(clubMembership);
-            }
-            else
-            {
                 return RedirectToAction(nameof(Index));
-            }
+            else
+                return View(clubMembership);
+       
         }
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            ViewData["MemberMemberId"] = _membershipRepository.GetMembersSelectList();
             return View();
         }
 
@@ -92,21 +62,17 @@ namespace AKP_TrackManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                var member = await _context.Members.FindAsync(clubMembership.MemberMemberId);
-                var memberships = await _context.ClubMemberships.Where(m => m.MemberMemberId == member.MemberId).FirstOrDefaultAsync();
-                if(memberships != null)
-                {
-                    ModelState.AddModelError("Member already has membership", "Cannot assign more than 1 membership to member");
-                    ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
-                    return View(clubMembership);
-                }
-                _context.Add(clubMembership);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+              var membership = await _membershipRepository.Create(new Models.DTO.MembershipCreateDto { Membership= clubMembership });
+                if(membership == null)
+                    return RedirectToAction(nameof(Index));
+
+                ModelState.AddModelError(membership.ModelErrorKey, membership.ModelErrorString);
+                ViewData["MemberMemberId"] = membership.ViewData;
             }
-            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
+            ViewData["MemberMemberId"] = _membershipRepository.GetSelectedMemberSelectList(clubMembership.MemberMemberId);
             return View(clubMembership);
         }
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -120,7 +86,7 @@ namespace AKP_TrackManager.Controllers
                 return NotFound();
             }            
 
-            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
+            ViewData["MemberMemberId"] = _membershipRepository.GetSelectedMemberSelectList(clubMembership.MemberMemberId);
             return View(clubMembership);
         }
         [Authorize(Roles = "Admin")]
@@ -142,25 +108,13 @@ namespace AKP_TrackManager.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var updatedMembership = await _membershipRepository.Edit(id,clubMembership, User.Identity.Name, User.IsInRole("Admin"));
+                if (updatedMembership != null)
                 {
-                    _context.Update(clubMembership);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClubMembershipExists(clubMembership.MembershipId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberMemberId"] = new SelectList(_context.Members, "MemberId", "EmailAddress", clubMembership.MemberMemberId);
+            ViewData["MemberMemberId"] = _membershipRepository.GetSelectedMemberSelectList(clubMembership.MemberMemberId);
             return View(clubMembership);
         }
         [Authorize(Roles = "Admin")]
@@ -176,7 +130,7 @@ namespace AKP_TrackManager.Controllers
                 .FirstOrDefaultAsync(m => m.MembershipId == id);
             if (clubMembership == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             return View(clubMembership);
@@ -186,20 +140,9 @@ namespace AKP_TrackManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var clubMembership = await _context.ClubMemberships.FindAsync(id);
-            var payments = await _context.Payments.Where(c=> c.ClubMembershipMembershipId== id).ToListAsync();
-            foreach (var payment in payments)
-            {
-                _context.Payments.Remove(payment);
-            }
-            _context.ClubMemberships.Remove(clubMembership);
-            await _context.SaveChangesAsync();
+            _ = await _membershipRepository.DeleteConfirmed(id, User.Identity.Name, User.IsInRole("Admin"));
             return RedirectToAction(nameof(Index));
         }
-
-        private bool ClubMembershipExists(int id)
-        {
-            return _context.ClubMemberships.Any(e => e.MembershipId == id);
-        }
+      
     }
 }
