@@ -100,15 +100,10 @@ namespace AKP_TrackManager.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
-            {
                 var memberUpdate = await _memberRepository.Edit(id, member);
-                if (memberUpdate == null)
-                    return NotFound();
-                else
+                if (memberUpdate != null)                    
                     return RedirectToAction(nameof(Index));                
-            }
+            
             ViewData["RoleRoleId"] = _memberRepository.GetRolesSelectedListItem(member.RoleRoleId);
             return View(member);
         }

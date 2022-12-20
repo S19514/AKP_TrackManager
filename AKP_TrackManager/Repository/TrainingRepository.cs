@@ -121,8 +121,15 @@ namespace AKP_TrackManager.Repository
             return training;
         }
 
-        public async Task<bool> DeleteConfirmed(int id)
+        public async Task<bool> DeleteConfirmed(int id) // only training that has not taken place
         {
+            var trainingAttendances = await _context.TrainingAttandances.Where(t => t.TrainingTrainingId == id).ToListAsync();
+            foreach(var trainingAttendance in trainingAttendances)
+            {
+                _context.TrainingAttandances.Remove(trainingAttendance);
+
+            }
+            await _context.SaveChangesAsync();
             var training = await _context.training.FindAsync(id);
             _context.training.Remove(training);
             try

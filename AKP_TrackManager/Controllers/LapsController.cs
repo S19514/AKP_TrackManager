@@ -10,6 +10,7 @@ using AKP_TrackManager.Models.DTO;
 using X.PagedList;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
+using AKP_TrackManager.Interfaces;
 
 namespace AKP_TrackManager.Controllers
 {
@@ -17,10 +18,11 @@ namespace AKP_TrackManager.Controllers
     public class LapsController : Controller
     {
         private readonly AKP_TrackManager_devContext _context;
-
-        public LapsController(AKP_TrackManager_devContext context)
+        private ILapRepository _lapRepository;
+        public LapsController(AKP_TrackManager_devContext context, ILapRepository lapRepository)
         {
             _context = context;
+            _lapRepository = lapRepository;
         }
 
         public async Task<IActionResult> Index(int? page)
@@ -28,151 +30,25 @@ namespace AKP_TrackManager.Controllers
 
             var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
-            if (HttpContext.User.IsInRole("Admin")) // list all for Admin-privileged user
-            {
-                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
-                var laps = await _context.Laps.Include(l => l.TrainingTraining).ToListAsync();
-                foreach (var lap in laps)
-                {
-                    var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
-                    var member = await _context.Members.Where(m => m.MemberId == memberCarOnLap.MemberMemberId).FirstOrDefaultAsync();
-                    var car = await _context.Cars.Where(c => c.CarId == memberCarOnLap.CarCarId).FirstOrDefaultAsync();
-                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
-                    {
-                        AbsoluteTime = lap.AbsoluteTime,
-                        CarId = car.CarId,
-                        DateOfBirth = member.DateOfBirth,
-                        TrainingTrainingId = lap.TrainingTrainingId,
-                        TrainingDate = lap.TrainingTraining.Date,
-                        EmailAddress = member.EmailAddress,
-                        LapId = lap.LapId,
-                        Name = member.Name,
-                        Surname = member.Surname,
-                        RegPlate = car.RegPlate,
-                        MemberId = member.MemberId,
-                        PenaltyTime = lap.PenaltyTime,
-                        MeasuredTime = lap.MeasuredTime,
 
-                    });                    
-                }
-                int pageSize = 10;
-                int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
-
-                return View(PagedList);
-            }
-            else
-            {
-                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
-                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
-                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m=>m.MemberMemberId == member.MemberId).ToList();
-                foreach(var mcol in membersCarsOnLaps)
-                {
-                    var lap = await _context.Laps.Include(t=>t.TrainingTraining).Where(m=>m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
-                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
-                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
-                    {
-                        AbsoluteTime = lap.AbsoluteTime,
-                        CarId = car.CarId,
-                        DateOfBirth = member.DateOfBirth,
-                        TrainingTrainingId = lap.TrainingTrainingId,
-                        EmailAddress = member.EmailAddress,
-                        LapId = lap.LapId,
-                        Name = member.Name,
-                        Surname = member.Surname,
-                        RegPlate = car.RegPlate,
-                        MemberId = member.MemberId,
-                        PenaltyTime = lap.PenaltyTime,
-                        MeasuredTime = lap.MeasuredTime,
-                        TrainingDate = lap.TrainingTraining.Date
-                    });
-                }
-                int pageSize = 10;
-                int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t=>t.TrainingDate), pageNumber, pageSize);
-
-                return View(PagedList);
-            }
+            return View(await _lapRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page)
         {
-            if (HttpContext.User.IsInRole("Admin"))
-            {
-                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
-                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
-                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m => m.MemberMemberId == member.MemberId).ToList();
-                foreach (var mcol in membersCarsOnLaps)
-                {
-                    var lap = await _context.Laps.Include(t => t.TrainingTraining).Where(m => m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
-                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
-                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
-                    {
-                        AbsoluteTime = lap.AbsoluteTime,
-                        CarId = car.CarId,
-                        DateOfBirth = member.DateOfBirth,
-                        TrainingTrainingId = lap.TrainingTrainingId,
-                        EmailAddress = member.EmailAddress,
-                        LapId = lap.LapId,
-                        Name = member.Name,
-                        Surname = member.Surname,
-                        RegPlate = car.RegPlate,
-                        MemberId = member.MemberId,
-                        PenaltyTime = lap.PenaltyTime,
-                        MeasuredTime = lap.MeasuredTime,
-                        TrainingDate = lap.TrainingTraining.Date
-                    });
-                }
-                int pageSize = 10;
-                int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
-                return View("IndexAdmin", PagedList);
-            }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
+                return View("IndexAdmin", await _lapRepository.IndexFilterAdmin(page,User.Identity.Name));           
         }
 
         public async Task<IActionResult> IndexByTrainingId(int? id, int? page)
         {
-           
-                List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
-                var member = await _context.Members.Where(m => m.EmailAddress == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
-                var membersCarsOnLaps = _context.MemberCarOnLaps.Where(m => m.MemberMemberId == member.MemberId && m.LapLap.TrainingTrainingId == id).ToList();
-                foreach (var mcol in membersCarsOnLaps)
-                {
-                    var lap = await _context.Laps.Include(t => t.TrainingTraining).Where(m => m.LapId == mcol.LapLapId).FirstOrDefaultAsync();
-                    var car = await _context.Cars.FindAsync(mcol.CarCarId);
-                    memberCarOnLapsDto.Add(new MemberCarOnLapDto
-                    {
-                        AbsoluteTime = lap.AbsoluteTime,
-                        CarId = car.CarId,
-                        DateOfBirth = member.DateOfBirth,
-                        TrainingTrainingId = lap.TrainingTrainingId,
-                        EmailAddress = member.EmailAddress,
-                        LapId = lap.LapId,
-                        Name = member.Name,
-                        Surname = member.Surname,
-                        RegPlate = car.RegPlate,
-                        MemberId = member.MemberId,
-                        PenaltyTime = lap.PenaltyTime,
-                        MeasuredTime = lap.MeasuredTime,
-                        TrainingDate = lap.TrainingTraining.Date
-                    });
-                }
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            X.PagedList.PagedList<MemberCarOnLapDto> PagedList = new PagedList<MemberCarOnLapDto>(memberCarOnLapsDto.OrderByDescending(t => t.TrainingDate), pageNumber, pageSize);
-            if (User.Identity.Name == member.EmailAddress)
-            {
+            var PagedList = await _lapRepository.IndexByTrainingId(id, page,User.Identity.Name);           
+               
+            if(PagedList != null)
                 return View("IndexByTrainingId", PagedList);
-            }
+            
             else
                return RedirectToAction(nameof(Index));
-
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -180,52 +56,9 @@ namespace AKP_TrackManager.Controllers
             if (id == null)
             {
                 return NotFound();
-            }
-
-            var lap = await _context.Laps
-                .Include(l => l.TrainingTraining)
-                .FirstOrDefaultAsync(m => m.LapId == id);
-            if (lap == null)
-            {
-                return NotFound();
-            }
-            var memberCarOnLap = await _context.MemberCarOnLaps.Where(m => m.LapLapId == lap.LapId).FirstOrDefaultAsync();
-            if (memberCarOnLap == null)
-            {
-                return NotFound();
-            }
-            var car = await _context.Cars.FindAsync(memberCarOnLap.CarCarId);
-            if(car == null)
-            {
-                return NotFound();
-            }
-            var member = await _context.Members.FindAsync(memberCarOnLap.MemberMemberId);
-            if(member == null)
-            {
-                return NotFound();
-            }
-
-            var memberCarOnLapDto = new MemberCarOnLapDto
-            {
-                AbsoluteTime = lap.AbsoluteTime,
-                CarId = car.CarId,
-                DateOfBirth = member.DateOfBirth,
-                TrainingTrainingId = lap.TrainingTrainingId,
-                EmailAddress = member.EmailAddress,
-                LapId = lap.LapId,
-                Name = member.Name,
-                Surname = member.Surname,
-                RegPlate = car.RegPlate,
-                MemberId = member.MemberId,
-                PenaltyTime = lap.PenaltyTime,
-                MeasuredTime = lap.MeasuredTime,
-                TrainingDate = lap.TrainingTraining.Date,
-                Model = car.Model,
-                Make = car.Make,
-                TrainingLocationString = await _context.Locations.Where(l => l.LocationId == lap.TrainingTraining.LocationLocationId).Select(l => l.FriendlyName).FirstOrDefaultAsync()
-            };
-
-            if (User.Identity.Name == member.EmailAddress)
+            }          
+            var memberCarOnLapDto = await _lapRepository.Details(id, User.Identity.Name,User.IsInRole("Admin"));
+            if (memberCarOnLapDto != null)
             {
                 return View(memberCarOnLapDto);
             }
@@ -248,27 +81,12 @@ namespace AKP_TrackManager.Controllers
         public async Task<IActionResult> Create([Bind("LapId,MeasuredTime,PenaltyTime,AbsoluteTime,TrainingTrainingId,MemberId,CarId")] MemberCarOnLapDto pMemberLapOnCar)
         {
             if (ModelState.IsValid)
-            {
-                var lap = new Lap()
+            {               
+                var newMemberLapOnCar = await _lapRepository.Create(pMemberLapOnCar);
+                if (newMemberLapOnCar != null)
                 {
-                    AbsoluteTime = pMemberLapOnCar.AbsoluteTime,
-                    MeasuredTime = pMemberLapOnCar.MeasuredTime,
-                    PenaltyTime = pMemberLapOnCar.PenaltyTime,
-                    TrainingTrainingId = pMemberLapOnCar.TrainingTrainingId
-                };
-                _context.Laps.Add(lap);
-                await _context.SaveChangesAsync();
-
-                MemberCarOnLap memberCarOnLap = new MemberCarOnLap()
-                {
-                    CarCarId = pMemberLapOnCar.CarId,
-                    LapLapId = lap.LapId,
-                    MemberMemberId = pMemberLapOnCar.MemberId,
-                };
-                _context.MemberCarOnLaps.Add(memberCarOnLap);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
@@ -460,11 +278,7 @@ namespace AKP_TrackManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lap = await _context.Laps.FindAsync(id);
-            var memberCarOnLaps = await _context.MemberCarOnLaps.Where(m => m.LapLapId == id).FirstOrDefaultAsync();
-            _context.MemberCarOnLaps.Remove(memberCarOnLaps);
-            _context.Laps.Remove(lap);
-            await _context.SaveChangesAsync();
+            _ = await _lapRepository.DeleteConfirmed(id, User.Identity.Name, User.IsInRole("Admin"));
             return RedirectToAction(nameof(Index));
         }
 

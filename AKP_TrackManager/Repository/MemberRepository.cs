@@ -124,7 +124,7 @@ namespace AKP_TrackManager.Repository
         public async Task<Member> Edit(int id, Member member)
         {
             try
-            {
+            {              
                 var membership = await _context.ClubMemberships.Where(m => m.MemberMemberId == member.MemberId).FirstOrDefaultAsync();
                 if (membership == null)
                 {
@@ -147,10 +147,10 @@ namespace AKP_TrackManager.Repository
                     membership.FeeAmount = 50;
                     _context.ClubMemberships.Update(membership);
                 }
-                #endregion
-                _context.Members.Update(member);
+                #endregion             
                 try
                 {
+                    _context.Members.Update(member);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -170,7 +170,7 @@ namespace AKP_TrackManager.Repository
                 }
             }
             
-            return member ;
+            return member;
         }
 
         public async Task<IEnumerable<Member>> Index(int? page)
