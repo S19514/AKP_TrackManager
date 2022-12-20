@@ -47,6 +47,7 @@ namespace AKP_TrackManager
 
             services.AddControllersWithViews();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<ITrainingRepository, TrainingRepository>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -55,6 +56,7 @@ namespace AKP_TrackManager
                 options.LogoutPath = "/Home/Logout";
 
                 options.AccessDeniedPath = "/Home/Login/";
+
                 options.SlidingExpiration = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.Events.OnRedirectToLogin = (context) =>

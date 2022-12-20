@@ -1,5 +1,7 @@
 ﻿using AKP_TrackManager.Models;
+using AKP_TrackManager.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,14 +9,14 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<IEnumerable<Member>> Index();
-        Task<IActionResult> Details(int? id);
-        IActionResult Create();
-        Task<IActionResult> Create(Member member);
-        Task<IActionResult> Edit(int? id);
-        Task<IActionResult> Edit(int id, Member member);
-        Task<IActionResult> Delete(int? id);
-        Task<IActionResult> DeleteConfirmed(int id);
+        Task<IEnumerable<Member>> Index(int? page);
+        Task<Member> Details(int? id);
+        SelectList Create();
+        Task<MemberCreateDto> Create(MemberCreateDto member);
+        Task<Member> Edit(int id, Member member);
+        Task<bool> DeleteConfirmed(int id);
         bool MemberExists(int id);
+        bool MemberMailChecker(string email);
+        SelectList GetRolesSelectedListItem(int RoleId);
     }
 }
