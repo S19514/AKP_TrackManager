@@ -101,7 +101,7 @@ namespace AKP_TrackManager.Controllers
 
             if (ModelState.IsValid)
             {
-                var updatedCarMember = await _carRepository.Edit(id, User.Identity.Name, User.IsInRole("Admin"));
+                var updatedCarMember = await _carRepository.Edit(id,pCarMemberDto, User.Identity.Name, User.IsInRole("Admin"));
                 if (updatedCarMember != null)
                 {
                     return RedirectToAction(nameof(Index));

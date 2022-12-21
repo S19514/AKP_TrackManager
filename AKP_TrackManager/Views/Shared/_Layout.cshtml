@@ -14,75 +14,78 @@
             Nie opłaciłeś składki członkowskiej!
         </div>*@ 
         @*todo later*@
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                 @if(!User.Identity.IsAuthenticated)
-                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="ReturnLoginView">TrackManager</a>
-                 }
-                 @if(User.Identity.IsAuthenticated)
-                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TrackManager</a>
-                 }
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+        @if (User.Identity.IsAuthenticated)
+        {
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="ReturnLoginView">TrackManager</a>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TrackManager</a>
+                    }
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity.IsAuthenticated)
-                        {                       
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
-                            </li>                                                                                 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="trainings" asp-action="Index">Trainings</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Accidents" asp-action="Index">Accidents</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ClubMemberships" asp-action="Index">Memberships</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a>
-                            </li>
-                            @if (User.IsInRole("Admin"))
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
+                                </li>                                                                                 
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="trainings" asp-action="Index">Trainings</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="TrainingAttandances" asp-action="Index">Attendances</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
                                 </li>
                                 <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TrackConfigurations" asp-action="Index">Configurations</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Accidents" asp-action="Index">Accidents</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Locations" asp-action="Index">Locations</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ClubMemberships" asp-action="Index">Memberships</a>
                                 </li>
-                            }                           
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Laps" asp-action="Index">Laps</a>
-                            </li>
-                              <li class="nav-item">
-                            <a class="nav-link text-dark" style="float:right" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
-                            </li>                            
-                        }
-                        @if(!User.Identity.IsAuthenticated)
-                        {
-                        @*    <li class="nav-item">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a>
+                                </li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="TrainingAttandances" asp-action="Index">Attendances</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="TrackConfigurations" asp-action="Index">Configurations</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Locations" asp-action="Index">Locations</a>
+                                    </li>
+                                }                           
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Laps" asp-action="Index">Laps</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" style="float:right" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                                </li>
+                            }
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                @*    <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area=""  asp-action="ReturnLoginView" asp-controller="Home" >Login</a>
-                                
+
                             </li>*@
-                        }
-                    </ul>
+                            }
+                        </ul>
                 </div>
             </div>
         </nav>
+        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">

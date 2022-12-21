@@ -68,9 +68,9 @@ namespace AKP_TrackManager.Controllers
 
         public IActionResult Create()
         {
-            var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date=t.Date.ToString("dd.MM.yyyy") }).ToList();
+            var trainingDates = _context.training.Where(t => t.Date < DateTime.Now).OrderByDescending(t=>t.Date).Select(t => new { TrainingId = t.TrainingId, Date=t.Date.ToString("dd.MM.yyyy") }).ToList();
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
-            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress");
+            ViewData["EmailAddress"] = new SelectList(_context.Members, "MemberId", "EmailAddress",_context.Members.Where(m=>m.EmailAddress == User.Identity.Name).Select(m=>m.MemberId).FirstOrDefault());
             ViewData["RegPlate"] = new SelectList(_context.Cars, "CarId", "RegPlate");
 
             return View();
