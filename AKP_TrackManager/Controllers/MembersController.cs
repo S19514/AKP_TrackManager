@@ -66,7 +66,7 @@ namespace AKP_TrackManager.Controllers
                 }                
             }            
             ViewData["RoleRoleId"] = _memberRepository.GetRolesSelectedListItem(member.RoleRoleId);
-            return View(member);
+            return RedirectToAction(nameof(Index));
         }
        
         [Authorize]

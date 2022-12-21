@@ -72,8 +72,8 @@ namespace AKP_TrackManager.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(); ;
-            return Redirect("/Home/Login");
+            await HttpContext.SignOutAsync(); 
+            return Redirect("/Home/ReturnLoginView");
         }
 
         [Authorize]
