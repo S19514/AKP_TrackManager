@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace AKP_TrackManager.Interfaces
 {
     public interface IAccidentRepository
     {
-        Task<IEnumerable<Accident>> Index(int? page, string contextUserName, bool isAdmin);
+        Task<IEnumerable<Accident>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchString);
         Task<IEnumerable<Accident>> IndexFilterAdmin(int? page, string contextUserName);
         Task<AccidentCarMemberDto> Details(int? id, string contextUserName, bool isAdmin);
         SelectList GetMembersSelectList();

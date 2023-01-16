@@ -31,6 +31,12 @@
         <a asp-action="Index" class="btn btn-success">Show All</a>
     }
 </p>
+<form asp-controller="ClubMemberships" asp-action="Index">
+    <p>
+        Member: <input type="text" name="SearchString" />
+        <input type="submit" value="Filter" class="btn btn-success" />
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>

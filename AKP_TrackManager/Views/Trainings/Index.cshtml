@@ -21,6 +21,13 @@
         <a asp-action="Create" class="btn btn-primary">Add New Training</a>
     </p>
 }
+<form asp-controller="Trainings" asp-action="Index">
+    <p>
+        Date: <input type="date" name="SearchString" />
+        <input type="submit" value="Filter" class="btn btn-success" />
+        
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>

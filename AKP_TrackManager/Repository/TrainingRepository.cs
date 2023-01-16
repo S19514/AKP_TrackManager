@@ -18,11 +18,17 @@ namespace AKP_TrackManager.Repository
         {
             _context = context;
         }
-        public async Task<IEnumerable<training>> Index(int? page)
+        public async Task<IEnumerable<training>> Index(int? page, DateTime? searchString)
         {
             var aKP_TrackManager_devContext = _context.training.OrderByDescending(t => t.Date)
                                                                 .Include(t => t.LocationLocation)
                                                                 .Include(t => t.TrackConfigurationTrack);
+            if(searchString != null)
+            {
+                aKP_TrackManager_devContext = aKP_TrackManager_devContext.Where(t => t.Date!.Equals(searchString)).OrderByDescending(t => t.Date)
+                                                                                                                    .Include(t => t.LocationLocation)
+                                                                                                                    .Include(t => t.TrackConfigurationTrack);
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             X.PagedList.PagedList<training> PagedList = new X.PagedList.PagedList<training>(aKP_TrackManager_devContext, pageNumber, pageSize);

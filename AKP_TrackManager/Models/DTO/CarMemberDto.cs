@@ -8,14 +8,17 @@ namespace AKP_TrackManager.Models.DTO
     {
         public int CarId { get; set; }
         [Required]
+        [StringLength(maximumLength: 100, MinimumLength = 3, ErrorMessage = "Make lenght is invalid")]
         public string Make { get; set; }
         [Required]
+        [StringLength(maximumLength: 100, MinimumLength = 1, ErrorMessage = "Model lenght is invalid")]
         public string Model { get; set; }
         [Required]
         public decimal EngingeCapacity { get; set; }
-        [Required]
+        [Required]               
         public int EnginePower { get; set; }
         [Required]
+        [StringLength(maximumLength: 7, MinimumLength = 4, ErrorMessage = "Registration Plate lenght is invalid")]
         public string RegPlate { get; set; }
         public int MemberId { get; set; }
         public string Name { get; set; }

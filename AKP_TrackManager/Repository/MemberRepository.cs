@@ -173,9 +173,13 @@ namespace AKP_TrackManager.Repository
             return member;
         }
 
-        public async Task<IEnumerable<Member>> Index(int? page)
-        {
+        public async Task<IEnumerable<Member>> Index(int? page, string searchString)
+        {            
             var members = _context.Members.Include(m => m.RoleRole);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                members = members.Where(m => m.Surname!.Contains(searchString)).Include(m=>m.RoleRole);
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             X.PagedList.PagedList<Member> PagedList = new X.PagedList.PagedList<Member>(members, pageNumber, pageSize);

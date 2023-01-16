@@ -26,9 +26,9 @@ namespace AKP_TrackManager.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, DateTime? searchString)
         {
-            return View(await _accidentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
+            return View(await _accidentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchString));
         }
 
         [Authorize(Roles = "Admin")]
@@ -113,7 +113,7 @@ namespace AKP_TrackManager.Controllers
 
             if (ModelState.IsValid)
             {
-               if(await _accidentRepository.Edit(id, User.Identity.Name, User.IsInRole("Admin")) != null)
+               if(await _accidentRepository.Edit(id,accident, User.Identity.Name, User.IsInRole("Admin")) != null)
                 return RedirectToAction(nameof(Index));
             }
             return View(accident);

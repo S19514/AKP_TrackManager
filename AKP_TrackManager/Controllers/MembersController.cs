@@ -29,9 +29,9 @@ namespace AKP_TrackManager.Controllers
             _memberRepository = memberRepository;            
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string searchString)
         {            
-            return View(await _memberRepository.Index(page));            
+            return View(await _memberRepository.Index(page,searchString));            
         }
 
         public async Task<IActionResult> Details(int? id)

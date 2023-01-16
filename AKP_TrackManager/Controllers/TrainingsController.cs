@@ -25,10 +25,10 @@ namespace AKP_TrackManager.Controllers
             _trainingRepository = trainingRepository;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, DateTime? searchString)
         {
-         
-            return View(await _trainingRepository.Index(page));            
+           
+            return View(await _trainingRepository.Index(page,searchString));            
         }
 
         public async Task<IActionResult> Details(int? id)

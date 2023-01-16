@@ -23,6 +23,7 @@ namespace AKP_TrackManager.Models
         public decimal EngingeCapacity { get; set; }
         public int EnginePower { get; set; }
         [Required]
+        [StringLength(maximumLength:7,MinimumLength = 4, ErrorMessage ="Registration Plate lenght is invalid")]
         public string RegPlate { get; set; }
 
         public virtual ICollection<CarAccidentByMember> CarAccidentByMembers { get; set; }

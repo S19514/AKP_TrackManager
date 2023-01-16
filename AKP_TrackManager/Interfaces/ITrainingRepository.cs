@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace AKP_TrackManager.Interfaces
 {
     public interface ITrainingRepository
     {
-        Task<IEnumerable<training>> Index(int? page);
+        Task<IEnumerable<training>> Index(int? page, DateTime? searchString);
         Task<training> Details(int? id);
         SelectList GetLocationFriendlyNames();
         SelectList GetTrackConfigurationPresetNames();

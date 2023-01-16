@@ -8,7 +8,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface IMembershipRepository
     {
-        Task<IEnumerable<ClubMembership>> Index(int? page, string contextUserName, bool isAdmin);
+        Task<IEnumerable<ClubMembership>> Index(int? page, string contextUserName, bool isAdmin, string searchString);
         Task<IEnumerable<ClubMembership>> IndexFilterAdmin(int? page, string contextUserName);
         Task<ClubMembership> Details(int? id, string contextUserName, bool isAdmin);
         SelectList GetMembersSelectList();

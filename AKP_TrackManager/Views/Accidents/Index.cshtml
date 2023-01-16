@@ -22,6 +22,13 @@
                 <a asp-action="Index" class="btn btn-success">Show All</a>
         }
     </p>
+    <form asp-controller="Accidents" asp-action="Index">
+        <p>
+            Date: <input type="date" name="SearchString" />
+            <input type="submit" value="Filter" class="btn btn-success" />
+
+        </p>
+    </form>
 </thead>
 <table class="table">
     <thead>

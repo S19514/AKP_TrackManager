@@ -20,6 +20,12 @@
         <a asp-action="Create" class="btn btn-primary">Add New Member</a>
     }
 </p>
+<form asp-controller="Members" asp-action="Index">
+    <p>
+        Surname: <input type="text" name="SearchString" />
+        <input type="submit" value="Filter" class="btn btn-success" />         
+    </p>
+</form>
 
 <table class="table">
     <thead>

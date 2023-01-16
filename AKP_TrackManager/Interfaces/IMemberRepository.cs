@@ -9,7 +9,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<IEnumerable<Member>> Index(int? page);
+        Task<IEnumerable<Member>> Index(int? page, string searchString);
         Task<Member> Details(int? id);
         SelectList Create();
         Task<MemberCreateDto> Create(MemberCreateDto member);

@@ -9,7 +9,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface ICarRepository
     {
-        Task<IEnumerable<CarMemberDto>> Index(int? page, string contextUserName, bool isAdmin);
+        Task<IEnumerable<CarMemberDto>> Index(int? page, string contextUserName, bool isAdmin, string searchString);
         Task<IEnumerable<CarMemberDto>> IndexFilterAdmin(int? page, string contextUserName);
         Task<CarMemberDto> Details(int? id, string contextUserName, bool isAdmin);
         SelectList GetMembersSelectList();

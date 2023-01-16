@@ -211,8 +211,8 @@ namespace AKP_TrackManager.Repository
         {
             try
             {
-                var carAccidentByMember = await _context.CarAccidentByMembers.Where(c => c.AccidentAccidentId == accident.AccidentId).FirstOrDefaultAsync();
-                var accidentStored = await _context.Accidents.Where(a => a.AccidentId == accident.AccidentId).FirstOrDefaultAsync();
+                var carAccidentByMember =  _context.CarAccidentByMembers.Where(c => c.AccidentAccidentId == accident.AccidentId).FirstOrDefault();
+                var accidentStored = _context.Accidents.Where(a => a.AccidentId == accident.AccidentId).FirstOrDefault();
                 if (carAccidentByMember == null || accidentStored == null)
                 {
                     return null;
@@ -228,7 +228,7 @@ namespace AKP_TrackManager.Repository
                 await _context.SaveChangesAsync();
                 return accident;
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
                 if (!AccidentExists(accident.AccidentId))
                 {
@@ -256,28 +256,38 @@ namespace AKP_TrackManager.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Accident>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<Accident>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchString)
         {
             if (isAdmin)
             {
+                var accidents = _context.Accidents.ToList();
+                if(searchString != null)
+                {
+                    accidents = accidents.Where(a => a.AccidentDate.Equals(searchString)).ToList();
+                }
+
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(_context.Accidents.ToList(), pageNumber, pageSize);
+                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidents, pageNumber, pageSize);
                 return PagedList;
             }
             else
             {
-                List<Accident> accidentList = new List<Accident>();
+                List<Accident> accidents = new List<Accident>();
                 var member = _context.Members.Where(m => m.EmailAddress == contextUserName).FirstOrDefault();
                     var carAccidentByMember =  _context.CarAccidentByMembers.Where(c => c.MemberMemberId == member.MemberId).ToList();
 
                 foreach (var carAccident in carAccidentByMember)
                 {
-                    accidentList.Add(_context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefault());
+                    accidents.Add(_context.Accidents.Where(a => a.AccidentId == carAccident.AccidentAccidentId).FirstOrDefault());
+                }
+                if (searchString != null)
+                {
+                    accidents = accidents.Where(a => a.AccidentDate.Equals(searchString)).ToList();
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidentList, pageNumber, pageSize);
+                X.PagedList.PagedList<Accident> PagedList = new X.PagedList.PagedList<Accident>(accidents, pageNumber, pageSize);
 
                 return PagedList;
             }

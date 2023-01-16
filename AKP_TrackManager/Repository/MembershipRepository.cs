@@ -112,11 +112,15 @@ namespace AKP_TrackManager.Repository
             return new SelectList(_context.Members, "MemberId", "EmailAddress", memberId);
         }
 
-        public async Task<IEnumerable<ClubMembership>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<ClubMembership>> Index(int? page, string contextUserName, bool isAdmin,string searchString)
         {
             if (isAdmin)
             {
                 var memberships = _context.ClubMemberships.Include(c => c.MemberMember);
+                if(!String.IsNullOrEmpty(searchString))
+                {
+                    memberships = memberships.Include(c => c.MemberMember).Where(m => (m.MemberMember.Name + " " + m.MemberMember.Surname)!.Contains(searchString)).Include(c=>c.MemberMember);
+                }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(await memberships.ToListAsync(), pageNumber, pageSize);
@@ -126,6 +130,10 @@ namespace AKP_TrackManager.Repository
             {
                 var member = await _context.Members.Where(m => m.EmailAddress == contextUserName).FirstOrDefaultAsync();
                 var memberships = await _context.ClubMemberships.Include(c => c.MemberMember).Where(m => m.MemberMemberId == member.MemberId).ToListAsync();
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    memberships = memberships.Where(m => (m.MemberMember.Name + " " + m.MemberMember.Surname)!.Contains(searchString)).ToList();
+                }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 X.PagedList.PagedList<ClubMembership> PagedList = new X.PagedList.PagedList<ClubMembership>(memberships, pageNumber, pageSize);

@@ -246,7 +246,7 @@ namespace AKP_TrackManager.Repository
             return new SelectList(_context.Members, "MemberId", "EmailAddress", memberId);
         }
 
-        public async Task<IEnumerable<CarMemberDto>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<CarMemberDto>> Index(int? page, string contextUserName, bool isAdmin, string searchString)
         {
             if (isAdmin) // list all for Admin-privileged user
             {
@@ -280,6 +280,10 @@ namespace AKP_TrackManager.Repository
                         Surname = singleMember.Surname,
                         RegPlate = car.RegPlate
                     });
+                }
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    carMemberDtos = carMemberDtos.Where(c => c.RegPlate!.Contains(searchString)).ToList();
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
@@ -318,6 +322,10 @@ namespace AKP_TrackManager.Repository
                         RegPlate = car.RegPlate
 
                     });
+                }
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    carMemberDtos = carMemberDtos.Where(c => c.RegPlate!.Contains(searchString)).ToList();
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);

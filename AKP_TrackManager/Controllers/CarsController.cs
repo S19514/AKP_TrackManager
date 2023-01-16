@@ -23,9 +23,9 @@ namespace AKP_TrackManager.Controllers
             _carRepository = carRepository;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string searchString)
         {
-            return View(await _carRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
+            return View(await _carRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchString));
         }
 
         [Authorize(Roles = "Admin")]

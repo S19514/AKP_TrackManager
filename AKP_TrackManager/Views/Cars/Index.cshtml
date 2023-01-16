@@ -32,6 +32,12 @@
         <a asp-action="IndexFilterAdmin" class="btn btn-success">Show Only Yours</a>
         <a asp-action="Index" class="btn btn-success">Show All</a>
     }
+        <form asp-controller="Cars" asp-action="Index">
+            <p>
+                Registration Plate: <input type="text" name="SearchString" />
+                <input type="submit" value="Filter" class="btn btn-success" />
+            </p>
+        </form>
 </p>
 </thead>
 <table class="table">
