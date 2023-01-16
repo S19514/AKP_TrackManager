@@ -11,7 +11,9 @@ namespace AKP_TrackManager.Models
         public int PaymentId { get; set; }
         public int ClubMembershipMembershipId { get; set; }
         [Required]
+        [Range(0.0, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal Amount { get; set; }
+        [Required]
         public DateTime PaymentDate { get; set; }
         public int MemberMemberId { get; set; }
 

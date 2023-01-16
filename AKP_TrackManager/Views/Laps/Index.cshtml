@@ -36,6 +36,29 @@
             <a asp-action="Index" class="btn btn-success">Show All</a>
         }
 </p>
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-controller="Laps" asp-action="Index">
+            <p>
+                Member: <input type="text" name="SearchMember" value=@ViewData["SearchMember"] />
+                <input type="submit" value="Filter" class="btn btn-success" />
+            </p>
+        </form>
+    }
+    <form asp-controller="Laps" asp-action="Index">
+        <p>
+            Car: <input type="text" name="SearchCar" value=@ViewData["SearchCar"] />
+            <input type="submit" value="Filter" class="btn btn-success" />
+
+        </p>
+    </form>
+    <form asp-controller="Laps" asp-action="Index">
+        <p>
+            Training: <input type="date" name="SearchDate" value=@ViewData["SearchDate"] />
+            <input type="submit" value="Filter" class="btn btn-success" />
+
+        </p>
+    </form>
 </thead>
 <table class="table">
     <thead>
@@ -104,7 +127,7 @@
 </table>
 <br />
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchCar = ViewData["SearchCar"], searchMember = ViewData["SearchMember"], searchDate = ViewData["SearchDate"] }), new X.PagedList.Web.Common.PagedListRenderOptions{
     ActiveLiElementClass = "active",
     PageClasses = new[]{ "page-link"},
     LiElementClasses=new[] { "page-item" },

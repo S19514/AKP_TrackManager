@@ -24,6 +24,22 @@
             <a asp-action="Index" class="btn btn-success">Show All</a>
         }
     </p>
+    <form asp-controller="Payments" asp-action="Index">
+        <p>
+            Date: <input type="date" name="SearchDate" />
+            <input type="submit" value="Filter" class="btn btn-success" />
+        </p>
+    </form>
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-controller="Payments" asp-action="Index">
+            <p>
+            Member: <input type="text" name="SearchString" />
+            <input type="submit" value="Filter" class="btn btn-success" />
+
+        </p>
+    </form>
+    }
 </thead>
 <table class="table">
     <thead>

@@ -24,9 +24,9 @@ namespace AKP_TrackManager.Controllers
             _locationRepository = locationRepository;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page,string searchString)
         {                                                           
-            return View(await _locationRepository.Index(page));
+            return View(await _locationRepository.Index(page,searchString));
         }
 
         public async Task<IActionResult> Details(int? id)

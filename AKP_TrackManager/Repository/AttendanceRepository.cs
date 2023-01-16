@@ -49,13 +49,17 @@ namespace AKP_TrackManager.Repository
             return trainingAttandance;
         }
 
-        public async Task<IEnumerable<TrainingAttandance>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<TrainingAttandance>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchDate)
         {
 
             var trainingAttendances = await _context.TrainingAttandances
                                                         .Include(t => t.MemberMember)
                                                         .Include(t => t.TrainingTraining)
-                                                        .Include(t => t.TrainingTraining.LocationLocation).OrderByDescending(t => t.TrainingAttandanceId).ToListAsync();            
+                                                        .Include(t => t.TrainingTraining.LocationLocation).OrderByDescending(t => t.TrainingAttandanceId).ToListAsync();  
+            if(searchDate != null)
+            {
+                trainingAttendances = trainingAttendances.Where(t => t.TrainingTraining.Date!.Equals(searchDate)).ToList();
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             X.PagedList.PagedList<TrainingAttandance> PagedList = new X.PagedList.PagedList<TrainingAttandance>( trainingAttendances, pageNumber, pageSize);

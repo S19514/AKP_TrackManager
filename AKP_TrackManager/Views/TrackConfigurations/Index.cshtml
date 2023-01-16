@@ -19,6 +19,20 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New Configuration</a>
 </p>
+<thead style="display:flex" >
+<form asp-controller="TrackConfigurations" asp-action="Index">
+     <p>
+        Preset Number: <input type="number" min="1" max="99999" name="SearchNumber" />
+        <input type="submit" value="Filter" class="btn btn-success" />
+    </p>
+</form>
+<form asp-controller="TrackConfigurations" asp-action="Index">
+    <p>
+        Preset Name: <input type="text" name="SearchName"/>
+        <input type="submit" value="Filter" class="btn btn-success" />
+    </p>
+</form>
+</thead>
 <table class="table">
     <thead>
         <tr>

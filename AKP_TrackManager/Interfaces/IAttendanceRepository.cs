@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace AKP_TrackManager.Interfaces
 {
     public interface IAttendanceRepository
     {
-        Task<IEnumerable<TrainingAttandance>> Index(int? page, string contextUserName, bool isAdmin);
+        Task<IEnumerable<TrainingAttandance>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchDate);
         Task<IEnumerable<TrainingAttandance>> IndexFilterAdmin(int? page, string contextUserName);
         Task<TrainingAttandance> Details(int? id, string contextUserName, bool isAdmin);
         Task<int> DeleteConfirmed(int id, string contextUserName, bool isAdmin);

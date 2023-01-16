@@ -16,6 +16,7 @@ namespace AKP_TrackManager.Models
         public int MembershipId { get; set; }
         [Required]
         public DateTime JoinDate { get; set; }
+        [Range(0.0, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal FeeAmount { get; set; }
         
         public int MemberMemberId { get; set; }

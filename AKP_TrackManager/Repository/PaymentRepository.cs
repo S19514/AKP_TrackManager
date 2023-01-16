@@ -102,11 +102,19 @@ namespace AKP_TrackManager.Repository
             return new SelectList(_context.ClubMemberships, "MembershipId", "MembershipId", membershipId);
         }
 
-        public async Task<IEnumerable<Payment>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<Payment>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchDate, string searchString)
         {
             if (isAdmin)
             {
                 var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember);
+                if(searchDate != null)
+                {
+                    aKP_TrackManager_devContext = aKP_TrackManager_devContext.Where(p=>p.PaymentDate!.Equals(searchDate)).Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember);
+                }
+                if(!String.IsNullOrEmpty(searchString))
+                {
+                    aKP_TrackManager_devContext = aKP_TrackManager_devContext.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember).Where(p => (p.MemberMember.Name + " " + p.MemberMember.Surname)!.Contains(searchString)).Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember);
+                }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
                 X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
@@ -115,10 +123,18 @@ namespace AKP_TrackManager.Repository
             else
             {
                 var currentMember = _context.Members.Where(m => m.EmailAddress == contextUserName).FirstOrDefault();
-                var aKP_TrackManager_devContext = _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember).Where(c => c.MemberMemberId == currentMember.MemberId);
+                var payments = await _context.Payments.Include(p => p.ClubMembershipMembership).Include(p => p.MemberMember).Where(c => c.MemberMemberId == currentMember.MemberId).ToListAsync();
+                if (searchDate != null)
+                {
+                    payments = payments.Where(p => p.PaymentDate!.Equals(searchDate)).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    payments = payments.Where(p => (p.MemberMember.Name + " " + p.MemberMember.Surname)!.Contains(searchString)).ToList();
+                }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
-                X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(await aKP_TrackManager_devContext.ToListAsync(), pageNumber, pageSize);
+                X.PagedList.PagedList<Payment> PagedList = new X.PagedList.PagedList<Payment>(payments, pageNumber, pageSize);
                 return PagedList;
             }
         }

@@ -9,7 +9,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface IConfigurationRepository
     {
-        Task<IEnumerable<TrackConfiguration>> Index(int? page);        
+        Task<IEnumerable<TrackConfiguration>> Index(int? page, string searchName, int? searchNumber);        
         Task<TrackConfiguration> Details(int? id);
         Task<TrackConfiguration> Create(TrackConfiguration trackConfiguration);
         Task<TrackConfiguration> Edit(int id, TrackConfiguration trackConfiguration);        

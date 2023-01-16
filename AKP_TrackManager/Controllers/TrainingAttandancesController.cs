@@ -24,9 +24,10 @@ namespace AKP_TrackManager.Controllers
             _attendanceRepository = attendanceRepository;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, DateTime? searchDate)
         {
-            var attendances = await _attendanceRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"));         
+            var attendances = await _attendanceRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchDate);
+            ViewData["SearchDate"] = searchDate;
             return View(attendances);
             
         }

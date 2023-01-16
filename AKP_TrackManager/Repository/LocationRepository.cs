@@ -83,11 +83,16 @@ namespace AKP_TrackManager.Repository
             }
         }
 
-        public async Task<IEnumerable<Location>> Index(int? page)
+        public async Task<IEnumerable<Location>> Index(int? page,string searchString)
         {
+            var locations = await _context.Locations.Include(l => l.training).ToListAsync();
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                locations = locations.Where(l=>l.FriendlyName!.Contains(searchString)).ToList();
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            X.PagedList.PagedList<Location> PagedList = new X.PagedList.PagedList<Location>(await _context.Locations.Include(l=>l.training).ToListAsync(), pageNumber, pageSize);
+            X.PagedList.PagedList<Location> PagedList = new X.PagedList.PagedList<Location>(locations, pageNumber, pageSize);
             return PagedList;
         }
 

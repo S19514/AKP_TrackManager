@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="FeeAmount" class="control-label">Fee Amount</label>
-                <input asp-for="FeeAmount" class="form-control" />
+                <input asp-for="FeeAmount" min="0" class="form-control" />
                 <span asp-validation-for="FeeAmount" class="text-danger"></span>
             </div>
             <div class="form-group">

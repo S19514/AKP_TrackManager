@@ -1,6 +1,7 @@
 ﻿using AKP_TrackManager.Models;
 using AKP_TrackManager.Models.DTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface IPaymentRepository
     {
-        Task<IEnumerable<Payment>> Index(int? page, string contextUserName, bool isAdmin);
+        Task<IEnumerable<Payment>> Index(int? page, string contextUserName, bool isAdmin, DateTime? searchDate, string searchString);
         Task<IEnumerable<Payment>> IndexFilterAdmin(int? page, string contextUserName);
         Task<Payment> Details(int? id, string contextUserName, bool isAdmin);
         SelectList GetMembershipsSelectList();

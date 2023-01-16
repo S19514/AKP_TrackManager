@@ -20,6 +20,12 @@
             <a asp-action="Create" class="btn btn-primary">Create New Location</a>
         </p>
     }
+<form asp-controller="Locations" asp-action="Index">
+    <p>
+        Friendly Name: <input type="text" name="SearchString" />
+        <input type="submit" value="Filter" class="btn btn-success" />
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>

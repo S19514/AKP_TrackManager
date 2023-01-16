@@ -9,7 +9,7 @@ namespace AKP_TrackManager.Interfaces
 {
     public interface ILocationRepository
     {
-        Task<IEnumerable<Location>> Index(int? page);        
+        Task<IEnumerable<Location>> Index(int? page, string searchString);        
         Task<Location> Details(int? id);
         Task<Location> Create(Location location);
         Task<Location> Edit(int id, Location location);        

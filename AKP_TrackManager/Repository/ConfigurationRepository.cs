@@ -84,11 +84,20 @@ namespace AKP_TrackManager.Repository
             }            
         }
 
-        public async Task<IEnumerable<TrackConfiguration>> Index(int? page)
+        public async Task<IEnumerable<TrackConfiguration>> Index(int? page,string searchName, int? searchNumber)
         {
+            var configurations = await _context.TrackConfigurations.Include(t => t.training).ToListAsync();
+            if(!String.IsNullOrEmpty(searchName))
+            {
+                configurations = configurations.Where(c=> c.PresetName!.Contains(searchName)).ToList();
+            }
+            if (searchNumber != null && searchNumber > 0)
+            {
+                configurations = configurations.Where(c => c.PresetNumber!.Equals(searchNumber)).ToList();
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            X.PagedList.PagedList<TrackConfiguration> PagedList = new X.PagedList.PagedList<TrackConfiguration>(await _context.TrackConfigurations.Include(t=>t.training).ToListAsync(), pageNumber, pageSize);
+            X.PagedList.PagedList<TrackConfiguration> PagedList = new X.PagedList.PagedList<TrackConfiguration>(configurations, pageNumber, pageSize);
             return PagedList;
         }
 

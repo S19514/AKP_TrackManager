@@ -25,19 +25,25 @@ namespace AKP_TrackManager.Controllers
             _lapRepository = lapRepository;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string searchCar, string searchMember, DateTime? searchDate)
         {
 
             var trainingDates = _context.training.Select(t => new { TrainingId = t.TrainingId, Date = t.Date.ToString("dd.MM.yyyy") }).ToList();
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
+            ViewData["SearchCar"] = searchCar;
+            ViewData["SearchMember"] = searchMember;
+            ViewData["SearchDate"] = searchDate;
 
-            return View(await _lapRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
+
+            return View(await _lapRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchCar,searchMember,searchDate));
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> IndexFilterAdmin(int? page)
+        public async Task<IActionResult> IndexFilterAdmin(int? page, string searchCar, DateTime? searchDate)
         {
-                return View("IndexAdmin", await _lapRepository.IndexFilterAdmin(page,User.Identity.Name));           
+            ViewData["SearchCar"] = searchCar;            
+            ViewData["SearchDate"] = searchDate;
+            return View("IndexAdmin", await _lapRepository.IndexFilterAdmin(page,User.Identity.Name,searchCar,searchDate));           
         }
 
         public async Task<IActionResult> IndexByTrainingId(int? id, int? page)

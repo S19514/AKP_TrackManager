@@ -20,15 +20,21 @@ namespace AKP_TrackManager.Models
 
         public int MemberId { get; set; }
         [Required]
+        [StringLength(150,MinimumLength = 3,ErrorMessage ="Invalid name length(3-150)")]
         public string Name { get; set; }
         [Required]
+        [StringLength(150, MinimumLength = 3, ErrorMessage = "Invalid surname length(3-150)")]
         public string Surname { get; set; }
         public DateTime DateOfBirth { get; set; }
+        [StringLength(20, MinimumLength = 9, ErrorMessage = "Invalid phone number length(9-20)")]
         public string PhoneNumber { get; set; }
-        [Required] 
+        [Required]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Invalid phone number length(6-100)")]
         public string EmailAddress { get; set; }
         public bool IsAscendant { get; set; }
         [Required]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Invalid password length(5-100)")]
+
         public string Password { get; set; }
         public bool IsStudent { get; set; }
         public int RoleRoleId { get; set; }

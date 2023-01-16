@@ -162,7 +162,7 @@ namespace AKP_TrackManager.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<MemberCarOnLapDto>> Index(int? page, string contextUserName, bool isAdmin)
+        public async Task<IEnumerable<MemberCarOnLapDto>> Index(int? page, string contextUserName, bool isAdmin, string searchCar, string searchMember, DateTime? searchDate)
         {
             if (isAdmin) // list all for Admin-privileged user
             {
@@ -190,6 +190,19 @@ namespace AKP_TrackManager.Repository
                         MeasuredTime = lap.MeasuredTime,
 
                     });
+                }
+                if(!string.IsNullOrEmpty(searchCar))
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(c => c.RegPlate!.Contains(searchCar)).ToList();
+                }
+                if (!string.IsNullOrEmpty(searchMember))
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(c => (c.Name + " " + c.Surname)!.Contains(searchMember)).ToList();
+                }
+                if (searchDate != null)
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(t=>t.TrainingDate!.Equals(searchDate)).ToList();
+
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
@@ -222,6 +235,19 @@ namespace AKP_TrackManager.Repository
                         MeasuredTime = lap.MeasuredTime,
                         TrainingDate = lap.TrainingTraining.Date
                     });
+                }
+                if (!string.IsNullOrEmpty(searchCar))
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(c => c.RegPlate!.Contains(searchCar)).ToList();
+                }
+                if (!string.IsNullOrEmpty(searchMember))
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(c => (c.Name + " " + c.Surname)!.Contains(searchMember)).ToList();
+                }
+                if (searchDate != null)
+                {
+                    memberCarOnLapsDto = memberCarOnLapsDto.Where(t => t.TrainingDate!.Equals(searchDate)).ToList();
+
                 }
                 int pageSize = 10;
                 int pageNumber = (page ?? 1);
@@ -268,7 +294,7 @@ namespace AKP_TrackManager.Repository
                 return null;
         }
 
-        public async Task<IEnumerable<MemberCarOnLapDto>> IndexFilterAdmin(int? page, string contextUserName)
+        public async Task<IEnumerable<MemberCarOnLapDto>> IndexFilterAdmin(int? page, string contextUserName, string searchCar, DateTime? searchDate)
         {
             List<MemberCarOnLapDto> memberCarOnLapsDto = new List<MemberCarOnLapDto>();
             var member = await _context.Members.Where(m => m.EmailAddress == contextUserName).FirstOrDefaultAsync();
@@ -293,6 +319,15 @@ namespace AKP_TrackManager.Repository
                     MeasuredTime = lap.MeasuredTime,
                     TrainingDate = lap.TrainingTraining.Date
                 });
+            }
+            if (!string.IsNullOrEmpty(searchCar))
+            {
+                memberCarOnLapsDto = memberCarOnLapsDto.Where(c => c.RegPlate!.Contains(searchCar)).ToList();
+            }
+            if (searchDate != null)
+            {
+                memberCarOnLapsDto = memberCarOnLapsDto.Where(t => t.TrainingDate!.Equals(searchDate)).ToList();
+
             }
             int pageSize = 10;
             int pageNumber = (page ?? 1);

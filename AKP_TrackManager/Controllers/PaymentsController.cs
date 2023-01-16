@@ -22,9 +22,9 @@ namespace AKP_TrackManager.Controllers
             _paymentRepository = paymentRepository;
         }
         
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, DateTime? searchDate, string searchString)
         {
-            return View(await _paymentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin")));
+            return View(await _paymentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchDate,searchString));
         }
 
         [Authorize(Roles = "Admin")]
