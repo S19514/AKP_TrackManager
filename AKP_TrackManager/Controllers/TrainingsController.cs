@@ -27,7 +27,13 @@ namespace AKP_TrackManager.Controllers
 
         public async Task<IActionResult> Index(int? page, DateTime? searchString)
         {
-           
+            if (searchString != null)
+            {
+                DateTime dateTime = Convert.ToDateTime(searchString);
+                ViewBag.SearchString = dateTime.ToString("yyy-MM-dd");
+            }
+
+
             return View(await _trainingRepository.Index(page,searchString));            
         }
 

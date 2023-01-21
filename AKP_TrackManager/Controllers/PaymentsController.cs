@@ -24,6 +24,13 @@ namespace AKP_TrackManager.Controllers
         
         public async Task<IActionResult> Index(int? page, DateTime? searchDate, string searchString)
         {
+            if (searchDate != null)
+            {
+                DateTime dateTime = Convert.ToDateTime(searchDate);
+                ViewBag.SearchDate = dateTime.ToString("yyy-MM-dd");
+            }
+            ViewBag.SearchString = searchString;
+
             return View(await _paymentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchDate,searchString));
         }
 

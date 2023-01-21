@@ -31,6 +31,8 @@ namespace AKP_TrackManager.Controllers
 
         public async Task<IActionResult> Index(int? page, string searchString)
         {            
+            ViewBag.SearchString = searchString;
+
             return View(await _memberRepository.Index(page,searchString));            
         }
 

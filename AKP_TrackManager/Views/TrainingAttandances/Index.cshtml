@@ -24,7 +24,7 @@
 </p>
     <form asp-controller="TrainingAttandances" asp-action="Index">
         <p>
-            Date: <input type="date" name="SearchDate" />
+            Date: <input type="date" name="SearchDate" value="@ViewData["SearchDate"]" />
             <input type="submit" value="Filter" class="btn btn-success" />
         </p>
     </form>

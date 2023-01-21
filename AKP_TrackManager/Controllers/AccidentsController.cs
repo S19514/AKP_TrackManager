@@ -28,6 +28,12 @@ namespace AKP_TrackManager.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int? page, DateTime? searchString)
         {
+            if (searchString != null)
+            {
+                DateTime dateTime = Convert.ToDateTime(searchString);
+                ViewBag.SearchString = dateTime.ToString("yyy-MM-dd");
+            }
+
             return View(await _accidentRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchString));
         }
 

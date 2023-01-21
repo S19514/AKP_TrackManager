@@ -178,7 +178,7 @@ namespace AKP_TrackManager.Repository
             var members = _context.Members.Include(m => m.RoleRole);
             if (!String.IsNullOrEmpty(searchString))
             {
-                members = members.Where(m => m.Surname!.Contains(searchString)).Include(m=>m.RoleRole);
+                members = members.Where(m =>(m.Name +" "+m.Surname)!.Contains(searchString)).Include(m=>m.RoleRole);
             }
             int pageSize = 10;
             int pageNumber = (page ?? 1);

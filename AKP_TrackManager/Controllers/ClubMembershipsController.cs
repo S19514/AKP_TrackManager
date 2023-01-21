@@ -25,6 +25,8 @@ namespace AKP_TrackManager.Controllers
 
         public async Task<IActionResult> Index(int? page, string searchString)
         {
+            ViewBag.SearchString = searchString;
+
             return View(await _membershipRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchString));
         }
 

@@ -32,8 +32,11 @@ namespace AKP_TrackManager.Controllers
             ViewData["Date"] = new SelectList(trainingDates, "TrainingId", "Date");
             ViewData["SearchCar"] = searchCar;
             ViewData["SearchMember"] = searchMember;
-            ViewData["SearchDate"] = searchDate;
-
+            if (searchDate != null)
+            {
+                DateTime dateTime = Convert.ToDateTime(searchDate);
+                ViewData["SearchDate"] = dateTime.ToString("yyy-MM-dd");
+            }
 
             return View(await _lapRepository.Index(page, User.Identity.Name, User.IsInRole("Admin"),searchCar,searchMember,searchDate));
         }
@@ -41,8 +44,12 @@ namespace AKP_TrackManager.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexFilterAdmin(int? page, string searchCar, DateTime? searchDate)
         {
-            ViewData["SearchCar"] = searchCar;            
-            ViewData["SearchDate"] = searchDate;
+            ViewData["SearchCar"] = searchCar;
+            if (searchDate != null)
+            {
+                DateTime dateTime = Convert.ToDateTime(searchDate);
+                ViewData["SearchDate"] = dateTime.ToString("yyy-MM-dd");
+            }
             return View("IndexAdmin", await _lapRepository.IndexFilterAdmin(page,User.Identity.Name,searchCar,searchDate));           
         }
 

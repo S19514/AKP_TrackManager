@@ -22,7 +22,7 @@
     }
 <form asp-controller="Locations" asp-action="Index">
     <p>
-        Friendly Name: <input type="text" name="SearchString" />
+        Friendly Name: <input type="text" name="SearchString" value="@ViewBag.SearchString"/>
         <input type="submit" value="Filter" class="btn btn-success" />
     </p>
 </form>
@@ -76,7 +76,7 @@
 </table>
 <br />
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new X.PagedList.Web.Common.PagedListRenderOptions{
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = ViewBag.SearchString }), new X.PagedList.Web.Common.PagedListRenderOptions{
     ActiveLiElementClass = "active",
     PageClasses = new[]{ "page-link"},
     LiElementClasses=new[] { "page-item" },

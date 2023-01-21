@@ -31,14 +31,14 @@
     </p>
         <form asp-controller="Laps" asp-action="IndexFilterAdmin">
         <p>
-            Car: <input type="text" name="SearchCar" value=@ViewData["SearchCar"] />
+            Car: <input type="text" name="SearchCar" value="@ViewData["SearchCar"]"/>
             <input type="submit" value="Filter" class="btn btn-success" />
 
         </p>
     </form>
     <form asp-controller="Laps" asp-action="IndexFilterAdmin">
         <p>
-            Training: <input type="date" name="SearchDate" value=@ViewData["SearchDate"] />
+            Training: <input type="date" name="SearchDate" value="@ViewData["SearchDate"]"/>
             <input type="submit" value="Filter" class="btn btn-success" />
 
         </p>

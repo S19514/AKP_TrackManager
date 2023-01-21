@@ -24,8 +24,11 @@ namespace AKP_TrackManager.Controllers
             _configurationRepository = configurationRepository;
         }
 
-        public async Task<IActionResult> Index(int? page, string searchName, int searchNumber)
-        {
+        public async Task<IActionResult> Index(int? page, string searchName, int? searchNumber)
+        {            
+            ViewBag.SearchName = searchName;
+            ViewBag.SearchNumber = searchNumber;
+        
             return View(await _configurationRepository.Index(page,searchName,searchNumber));
         }
 
